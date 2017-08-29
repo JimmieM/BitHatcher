@@ -1,0 +1,169 @@
+<ion-view ng-controller="battlesController" title="Battles" id="page4">
+
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="right">
+          <button style="width: 100%;border-radius:0px;min-height:0px;background-color: transparent;border: none;color: white;" class="button icon-left ion-ribbon-a"> Top 10</button>
+        </ion-nav-buttons>
+        <<ion-nav-buttons side="left">
+          <button ng-click="goTo('tabsController.recent_battles')" style="width: 100%;border-radius:0px;min-height:0px;background-color: transparent;border: none;color: white;" class="button icon-left ion-ios-list-outline"> Recent battles</button>
+
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+  <ion-content padding="true" class="has-header">
+    <ion-refresher
+      spinner-class="asdad"
+      pulling-text="Update..."
+      on-refresh="fetchBattles()">
+    </ion-refresher>
+
+    <div id="profile-button-bar2" class="button-bar"></div>
+<!--
+    <button class="button" ng-click="add()">Add notification</button>
+      <button class="button" ng-click="isScheduled()">Is Scheduled</button> -->
+    <!-- <div class="row">
+      <div class="col-60">
+        <ion-list ng-controller="projectsController" id="profile-list1" ng-init="fetchUserData()">
+          <ion-item ng-click="view_player_profile();" style="min-height: 89px;padding-left: 90px;" class="item-avatar" id="profile-list-item2">
+            <img style="max-width: 60px;max-height: 60px;" src="{{avatar}}" alt="Avatar">
+            <h2 id="username" ng-bind="username"></h2>
+            <p id="level" ng-bind="level">Level:</p> -->
+              <!-- <button class="button button-small button-balanced icon-right ion-navicon">Inventory</button> -->
+          <!-- </ion-item>
+        </ion-list>
+      </div>
+      <div class="col-40">
+        <ion-list>
+
+            <button ng-click="goToShop();" style="width: 100%;border-radius:0px; background-color: #28a54c; min-height:0px;" class="button icon-left ion-cash button-balanced ">Shop</button>
+            <button ng-click="goToInventory();" style="width: 100%;border-radius:0px;min-height:0px;" class="button icon-left ion-ios-nutrition button-balanced">Inventory</button>
+
+        </ion-list>
+
+      </div>
+    </div> -->
+
+    <div id="profile-button-bar1" class="button-bar"></div>
+
+    <!-- search start || DISABLED DUE BAD DESIGN -->
+    <!-- <div class="bar item-input-inset bar-light">
+      <label class="item-input-wrapper">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="search" ng-model="query" placeholder="Search" value="">
+      </label>
+    </div> -->
+    <!-- search end -->
+
+
+    <ion-list ng-init="fetchBattles()" id="profile-list5" class="project-list row">
+
+
+      <div ng-if="!empty_battles" style="padding:0;" class="bar item-input-inset bar-light">
+        <label class="item-input-wrapper">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="search" ng-model="query" placeholder="Search battles" value="">
+        </label>
+      </div>
+      <div class="item item-divider">
+
+        <!-- show invites you've sent || you're player1 -->
+        <h4 ng-if="!empty_battles" id="profile-heading1" style="color:#000000;"> Available battles</h4>
+        <h4 ng-if="empty_battles" id="profile-heading1" style="color:#000000;"> There are no battles available</h4>
+      </div>
+
+      <ion-item ng-repeat='item in battles | filter: query' class="item-thumbnail-left item-icon-right" id="profile-list-item6">
+        <img class="project_image" src='{{item.src_path}}{{item.stage}}.png'>
+        <h2>{{item.name}}</h2>
+        <p style="white-space:normal;">Pet owner<span ng-if="item.player2 !== ''">s</span>
+
+          <a href="#" ng-click="view_player_profile({{item.player1_id}})"> {{item.player1}}</a>
+          <span ng-if="item.player2 !== ''">and</span>
+          <a href="#" ng-click="view_player_profile({{item.player_id}})"> {{item.player2}}</a>
+          <br>
+          <!-- Stage: {{item.stage}} -->
+
+          <p class="ion-ios-clock-outline"> {{item.battle_signed_up_date}}</p>
+          <br>
+
+
+          <h3>Winner's rewards:</h3>
+          <p ng-if="item.battle_winner_reward_pet !== '0'" class="ion-ios-paw"> {{item.battle_winner_reward_pet}}</p>
+          <p ng-if="item.battle_winner_reward_bitfunds !== '0'" class="ion-cash"> {{item.battle_winner_reward_bitfunds}}</p>
+          <p class="ion-ios-nutrition"> Resource bundle</p>
+
+
+          <!-- Rewards: Resource bundle, <span ng-if="item.battle_winner_reward_pet !== '0'">1 {{item.battle_winner_reward_pet}}, </span>
+          <span ng-if="item.battle_winner_reward_bitfunds !== '0'">{{item.battle_winner_reward_bitfunds}} BitFunds</span> -->
+        </p>
+        <p>
+
+        </p>
+        <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+        <ion-option-button ng-if="item.can_sign == 0" class="button-assertive" ng-click="delete_battle(item.battle_id)">Delete Battle</ion-option-button>
+        <ion-option-button ng-disabled="item.can_sign === 0" class="button-stable" ng-click="enter_battle(item.battle_id,item.battle_id, item.name)">Enter</ion-option-button>
+
+      </ion-item>
+
+    </ion-list>
+
+
+    <script id='projects_choose.html' type='text/ng-template'>
+      <ion-list>
+        <ion-radio ng-repeat="item in projects" class="wrapping-list" ng-model="choice.value" ng-value="'{{item.id}}'">{{item.name}}</ion-radio>
+        <ion-list>
+    </script>
+
+    <script id='rewards_choose.html' type='text/ng-template'>
+      <ion-list>
+        <ion-list>
+          <br />
+          <div class="item item-divider">
+            <h3>Resource Bundle</h3>
+          </div>
+          <ion-radio ng-checked name="resource_bundle" class="wrapping-list" ng-model="resource_bundle.value" ng-value="'1'">Resource Bundle</ion-radio>
+        </ion-list>
+        <ion-list>
+          <br />
+          <div class="item item-divider">
+            <h3 class="icon ion-android-arrow-dropright icon-accessory" ng-click="bitfund = bitfund !== true"> BitFunds</h3>
+          </div>
+          <div ng-if="bitfund">
+            <ion-radio name="bitfund" class="wrapping-list" ng-model="bitfunds.value" ng-value="'0'">0</ion-radio>
+            <ion-radio name="bitfund" class="wrapping-list" ng-model="bitfunds.value" ng-value="'20'">20</ion-radio>
+            <ion-radio name="bitfund" class="wrapping-list" ng-model="bitfunds.value" ng-value="'50'">50</ion-radio>
+            <ion-radio name="bitfund" class="wrapping-list" ng-model="bitfunds.value" ng-value="'75'">75</ion-radio>
+          </div>
+
+        </ion-list>
+
+        <ion-list>
+          <br />
+          <div class="item item-divider">
+            <h3 class="icon ion-android-arrow-dropright icon-accessory" ng-click="pets = pets !== true"> Pet</h3>
+          </div>
+          <div ng-if="pets">
+            <ion-radio name="pet" class="wrapping-list" ng-model="pet.value" ng-value="'null'">None</ion-radio>
+            <ion-radio name="pet" class="wrapping-list" ng-model="pet.value" ng-value="'1'">Bird egg</ion-radio>
+            <ion-radio name="pet" class="wrapping-list" ng-model="pet.value" ng-value="'4'">Red Panda</ion-radio>
+            <ion-radio name="pet" class="wrapping-list" ng-model="pet.value" ng-value="'2'">Fox</ion-radio>
+            <ion-radio name="pet" class="wrapping-list" ng-model="pet.value" ng-value="'3'">Bunny</ion-radio>
+          </div>
+        </ion-list>
+
+
+        <ion-list>
+    </script>
+
+    <script id="pve_pvp_choose.html" type="text/ng-template">
+      <ion-list>
+        <ion-radio ng-click="show_pve" name="pve_pvp" class="wrapping-list" ng-model="pvp_pve.value" ng-value="'pve'">PvE</ion-radio>
+        <ion-radio ng-click="show_pvp" name="pve_pvp" class="wrapping-list" ng-model="pvp_pve.value" ng-value="'pvp'">PvP</ion-radio>
+      </ion-list>
+    </script>
+
+
+    <a ng-click="new_battle()" id="profile-button1" class="button button-balanced gradient button-block"><span>New battle</span></a>
+  </ion-content>
+</ion-view>

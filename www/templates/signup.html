@@ -1,0 +1,43 @@
+<ion-view title="Sign up" id="page6">
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+    <ion-nav-back-button class="button-icon ion-ios-arrow-left">
+    </ion-nav-back-button>
+    <ion-nav-buttons side="right">
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-content ng-controller="signupController" padding="true" class="has-header">
+    <img style="width: 100%;    padding: 5% 35% 5% 35%;" src="img/logo.png" class="fullsize-image" alt="">
+    <form id="signup-form5" class="list">
+      <ion-list id="signup-list7">
+        <label class="item item-input email" id="signup-input6">
+          <span class="input-label">E-mail</span>
+          <input type="text" ng-model="email" placeholder="" required>
+        </label>
+        <label class="item item-input username" id="signup-input6">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="username" placeholder="" required>
+        </label>
+        <label class="item item-input password" id="signup-input7">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="password" placeholder="" required>
+        </label>
+        <label class="item item-select signup-gender_input" name="signup-gender">
+          <span class="input-label">Select gender</span>
+          <select ng-model="signup_gender.index" ng-change="gender_changed_select(signup_gender.index);" ng-options="genders.indexOf(gender) as gender for gender in genders">
+          </select>
+        </label>
+      </ion-list>
+        <ion-list id="profile-preview">
+          <ion-item style="padding-left: 90px;" src="#" class="item-avatar" id="profile-list-item2">
+            <img style="max-width:60px; max-height:60px;" src='{{gender_img}}'/>
+            <h3>This is you</h3>
+            <h2 id="username">{{username}}</h2>
+            <p id="level">Level: 0</p>
+            <p id="email">{{email}}</p>
+            <br>
+          </ion-item>
+        </ion-list>
+      <button ng-disabled="disabled" ng-click="signup(email, username, password)" id="signup-button4" class="button button-balanced gradient  button-block">Sign up</button>
+    </form>
+  </ion-content>
+</ion-view>

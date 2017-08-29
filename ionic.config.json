@@ -1,0 +1,8 @@
+{
+  "name": "BitHatcher",
+  "app_id": "c4c31bb9",
+  "type": "ionic1",
+  "watchPatterns": [
+    "scss/**/*"
+  ]
+}

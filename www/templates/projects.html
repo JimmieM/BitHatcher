@@ -1,0 +1,157 @@
+<ion-view ng-controller="listController" ng-init="fetchProjects()" title="Pets" id="page4">
+
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="right">
+          <button ng-click="goToSettings();" style="width: 100%;border-radius:0px;min-height:0px;    background-color: transparent;border: none;color: white;" class="button icon-left ion-android-settings"></button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+  <ion-content padding="true" class="has-header">
+    <ion-refresher
+      pulling-text="Update..."
+      on-refresh="fetchProjects();">
+    </ion-refresher>
+
+    <div id="profile-button-bar2" class="button-bar"></div>
+
+
+    <div class="row">
+      <div class="col-60">
+        <ion-list ng-controller="projectsController" id="profile-list1" ng-init="fetchUserData()">
+          <ion-item ng-click="view_player_profile();" style="min-height: 89px;padding-left: 90px;" class="item-avatar" id="profile-list-item2">
+            <img style="max-width: 60px;max-height: 60px;" src="{{avatar}}" alt="Avatar">
+            <h2 id="username" ng-bind="username"></h2>
+            <p id="level" ng-bind="level">Level:</p>
+              <!-- <button class="button button-small button-balanced icon-right ion-navicon">Inventory</button> -->
+          </ion-item>
+        </ion-list>
+      </div>
+      <div class="col-40">
+        <ion-list>
+
+            <button ng-click="goToShop();" style="width: 100%;border-radius:0px; background-color: #28a54c; min-height:0px;" class="button icon-left ion-cash button-balanced gradient ">Shop</button>
+            <button ng-click="goToInventory();" style="width: 100%;border-radius:0px;min-height:0px;" class="button icon-left ion-ios-nutrition button-balanced gradient">Inventory</button>
+
+        </ion-list>
+
+      </div>
+    </div>
+
+    <div id="profile-button-bar1" class="button-bar"></div>
+
+    <!-- search start || DISABLED DUE BAD DESIGN -->
+    <!-- <div class="bar item-input-inset bar-light">
+      <label class="item-input-wrapper">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="search" ng-model="query" placeholder="Search" value="">
+      </label>
+    </div> -->
+    <!-- search end -->
+
+
+    <ion-list ng-controller="listController" id="profile-list5" class="project-list row">
+
+    <!-- if no projects was found.. -->
+    <h4 class="title" ng-if="!projects">You don't own any pets yet. Visit the shop to purchase one!</h4>
+
+    <div ng-if="outgoing_projects > 0">
+      <div ng-click="toggle_project_sections('invited')" class="item item-divider">
+        <!-- show invites you've sent || you're player1 -->
+        <h4 ng-if="!invited && projects" class="icon ion-android-arrow-dropright icon-accessory" id="profile-heading1" style="color:#000000;"> ({{outgoing_projects}}) Click to view outgoing invites</h5></i>
+        <h4 ng-if="invited && projects" class="icon ion-android-arrow-dropdown icon-accessory" id="profile-heading1" style="color:#000000;"> You have {{outgoing_projects}} outgoing invites:</h5></i>
+      </div>
+
+        <!-- invited to projects -->
+        <ion-item ng-if="invited && item.player1 === username && item.request_sent_by_player1 == '1' && (item.player2_accepted == '-1' ||  item.player2_accepted == '0')" ng-repeat='item in projects | filter: query' class="item-thumbnail-left item-icon-right" id="profile-list-item6">
+          <img class="project_image" src="{{item.src_path}}">
+          <h2>{{item.name}}</h2>
+          <p style="white-space: normal;" ng-if="item.player2_accepted == '0'">You've invited
+            <a href="#"> {{item.player2}}</a> to join {{item.name}}
+          </p>
+          <p ng-if="item.player2_accepted == '-1' && item.player2 !== username">
+            <a href="#">{{item.player2}}</a> has declined your invitation
+          </p>
+          <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+          <!-- player 2 has yet to accept -->
+          <ion-option-button class="button-assertive gradient" ng-click="configProject(item.id,item.name)">Config</ion-option-button>
+        </ion-item>
+    </div>
+
+    <div ng-if="incoming_projects > 0">
+      <div ng-click="toggle_project_sections('invites')" class="item item-divider">
+        <!-- show incoming project requests || you're player2 -->
+        <h4 ng-if="!invites && projects" class="icon ion-android-arrow-dropright icon-accessory" style="color:#000000;"> ({{incoming_projects}}) Click to view pet invites:</h5></i>
+        <h4 ng-if="invites && projects" class="icon ion-android-arrow-dropdown icon-accessory" style="color:#000000;"> You have {{incoming_projects}} pet invites:</h5></i>
+      </div>
+
+        <!-- invited to projects -->
+        <ion-item ng-if="invites && item.player2_accepted == '0' && item.player2 === username && item.request_sent_by_player1 == '0'" ng-repeat='item in projects | filter: query' class="item-thumbnail-left item-icon-right" id="profile-list-item6">
+          <img class="project_image" src="{{item.src_path}}">
+          <h2>{{item.name}}</h2>
+          <p >Pet invite by
+            <a href="#"> {{item.player1}}</a>
+          </p>
+          <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+          <!-- player 2 has yet to accept -->
+          <ion-option-button class="button-assertive" ng-click="project_invite(false, item.id)">Decline Invite</ion-option-button>
+          <ion-option-button class="button-stable" ng-click="project_invite(true, item.id)">Accept Invite</ion-option-button>
+        </ion-item>
+    </div>
+
+    <div ng-if="shared_projects > 0">
+      <div ng-click="toggle_project_sections('shared')" class="item item-divider">
+        <!-- show shared projects -->
+        <h4 ng-if="!shared && projects" class="icon ion-android-arrow-dropright icon-accessory" id="profile-heading1" style="color:#000000;"> ({{shared_projects}}) Click to view your pets:</h5></i>
+        <h4 ng-if="shared && projects" class="icon ion-android-arrow-dropdown icon-accessory" id="profile-heading1" style="color:#000000;"> All pets:</h5></i>
+      </div>
+
+      <!-- shared projects -->
+      <!-- if (player2 has accepted) == shared project ) | or | if (player2 is empty) == private project ) -->
+      <ion-item ng-if="(item.player2_accepted === '1' && shared) || (item.player2 === '' && shared)" ng-repeat='item in projects | filter: query' class="item-thumbnail-left item-icon-right" id="profile-list-item6">
+        <img class="project_image" ng-click="viewProject(item.id)" src='{{item.src_path}}'>
+        <h2>{{item.name}}</h2>
+        <div ng-if="item.player2_accepted == '1'">
+
+
+          <div ng-if="item.player2 !== username" ng-click="view_player_profile('{{item.player2}}')">
+            <img src="{{item.player_avatar}}" style="max-width:12%;border-radius:50%;vertical-align:middle" />
+            <span>
+              <a  href="#"> {{item.player2}}</a>
+            </span>
+          </div>
+
+          <div ng-if="item.player2 === username" ng-click="view_player_profile('{{item.player1}}')">
+            <img src="{{item.player_avatar}}" style="max-width:12%;border-radius:50%;vertical-align:middle" />
+            <span>
+              <a href="#"> {{item.player1}}</a>
+            </span>
+          </div>
+
+
+        </div>
+        <p>
+          <br>
+
+          <p style="white-space:normal;"><span ng-if="item.in_battle === '1'">Status: <span ng-if="item.battle_player2_joined === 1">In battle against <span ng-if="item.battle_pvp_pve === 'pvp'">{{item.in_battle_opponent}}</span><span ng-if="item.battle_pvp_pve === 'pve'">bot</span></span><span ng-if="item.battle_player2_joined === 0"> Queued for battle - Looking for opponent</span></span><span ng-if="item.in_battle === '0'">Tip: <span ng-if="item.current_status === '' || item.current_status === null">Don't overfeed your pets.</span> {{item.current_status}}</span></p>
+          <div>
+            <progress max="100" id="mini_progress" class="mini_health" value="{{item.health}}"> </progress>
+            <progress max="100" id="mini_progress" class="mini_energy" value="{{item.energy}}"> </progress>
+            <progress max="100" id="mini_progress" class="mini_agility" value="{{item.agility}}"> </progress>
+            <progress max="100" id="mini_progress" class="mini_strength" value="{{item.strength}}"> </progress>
+          </div>
+        </p>
+        <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+        <!-- project is active and player2 has accepted -->
+        <ion-option-button class="button-assertive gradient" ng-click="configProject(item.id,item.name, item.player2)">Config</ion-option-button>
+        <ion-option-button class="button-stable" ng-click="viewProject(item.id)">Enter</ion-option-button>
+      </ion-item>
+    </div>
+
+    </ion-list>
+
+
+    <!-- <a ui-sref="tabsController.newProject" id="profile-button1" class="button button-balanced button-block">New Project</a> -->
+  </ion-content>
+</ion-view>
