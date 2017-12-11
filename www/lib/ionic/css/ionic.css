@@ -5643,7 +5643,9 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
 
 .popup-body {
   padding: 10px;
-  overflow: auto; }
+  overflow: auto;
+  text-align: center;
+}
 
 .popup-buttons {
   display: -webkit-box;
@@ -8620,6 +8622,10 @@ progress[value]::-webkit-progress-bar {
   height: 7px;
 }
 
+.stat_bar {
+  width: 75%;
+  float: right;
+}
 
   /* health */
   .health[value] , .mini_health[value] {

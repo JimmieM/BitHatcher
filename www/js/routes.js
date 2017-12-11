@@ -70,6 +70,16 @@ angular.module('app.routes', [])
   })
 
 
+  .state('tabsController.achievements', {
+    url: '/achievements',
+    views: {
+      'projects': {
+        templateUrl: 'templates/achievements.html',
+        controller: 'achievementsCtrl'
+      }
+    }
+  })
+
   .state('tabsController.inventory', {
     url: '/inventory',
     views: {

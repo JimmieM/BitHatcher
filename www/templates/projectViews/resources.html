@@ -17,15 +17,87 @@
         <div class="item item-divider">
           Available attacks & spells
         </div>
+        <div ng-repeat="item in all_attacks" ng-if="item.available" class="item item-avatar item-button-right">
+            <img src="{{item.img_src}}">
+            <h2>{{item.name}}</h2>
+            <p style="white-space: initial;">
+              {{item.description}}
+            </p>
+            <br>
+            <div ng-if="item.cost === false">
+                <a style="color: #e42112;" class="ion-help" style="white-space: initial;"> Earn by completing: '{{item.achievement}}' achievement</a>
+            </div>
+            <div ng-if="item.cost > 0">
+              <a class="ion-cash"> {{item.cost}}</a>
+            </div>
+            <br>
+            <h3>Stats:</h3>
+            <div class="row">
+              <div class="col col-25">
+                <span><p class="progress_label">Damage:  </p></span>
+              </div>
+              <div class="col">
+                <progress max="100" id="mini_progress" class="mini_strength" value="{{item.damage}}"> </progress>
+              </div>
+            </div>
 
+            <div class="row">
+              <div class="col col-25">
+                <span><p class="progress_label">Protection:  </p></span>
+              </div>
+              <div class="col">
+                  <progress max="100" id="mini_progress" class="mini_energy" value="{{item.protection}}"> </progress>
+              </div>
+            </div>
 
-
-        <div class="item item-avatar item-button-right">
-            Water bottle
+            <div class="row">
+              Approx trigger rate: {{item.procc_per_battle}} per battle
+            </div>
             <br>
 
-            <button ng-click="addResources('Water bottle',5.0, 'foodtype_water')" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-ios-cart"></button>
+            <button ng-if="item.cost > 0" ng-click="purchase_attack('{{item.sql_name}}', '{{item.name}}', {{item.cost}})" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon cart">Purchase</button>
+            <button ng-if="!item.cost" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon">In progress</button>
         </div>
+
+        <div ng-repeat="item in all_attacks" ng-if="!item.available" style="background: #e0e0e0;" class="item item-avatar item-button-right">
+          <img src="{{item.img_src}}">
+            <h2>{{item.name}}</h2>
+            <p style="white-space: initial;">
+              {{item.description}}
+            </p>
+            <br>
+            <br>
+            <h3>Stats:</h3>
+
+            <div class="row">
+              <div class="col col-25">
+                <span><p class="progress_label">Damage:  </p></span>
+              </div>
+              <div class="col">
+                <progress max="100" id="mini_progress" class="mini_strength" value="{{item.damage}}"> </progress>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col col-25">
+                <span><p class="progress_label">Protection:  </p></span>
+              </div>
+              <div class="col">
+                  <progress max="100" id="mini_progress" class="mini_energy" value="{{item.protection}}"> </progress>
+              </div>
+            </div>
+
+            <div class="row">
+              Approx trigger rate: {{item.procc_per_battle}} per battle
+            </div>
+            <br>
+            <br>
+
+            <buttonstyle="color:#33cd5f;background-color:transparent;" disabled class="button button-balanced">Already owned</button>
+        </div>
+
+
+
         <!-- <div class="item item-avatar item-button-right">
             <img src="img/food/babybottle.png">
             Feeding bottle

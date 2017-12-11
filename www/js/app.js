@@ -91,23 +91,11 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
 .run(function($ionicPlatform, $state, $rootScope, $http, $ionicLoading, $ionicPopup, $cordovaVibration, $cordovaLocalNotification) {
   $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-  console.log("ALL ERRORS:");
+
   console.log(localStorage.getItem('Error_logs'));
 
   $rootScope.id = localStorage.getItem("Id");
   $rootScope.username = localStorage.getItem("Username");
-
-
-  // var ably = new Ably.Realtime('YWxmHw.T0c4Gg:9UQUZRXTeUv30RVL');
-  //
-  // ably.connection.on('connected', function() {
-  //   console.log("CONNECTED!");
-  // });
-  //
-  // var channel = ably.channels.get('test');
-  // channel.subscribe(function(message) {
-  //   alert('Received: ' + message.data);
-  // });
 
   document.addEventListener('deviceready', function () {
 
@@ -136,21 +124,15 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
 
     realtime.connection.on('connected', function() {
-      console.log("YES!");
       //alert('Connected');
     });
 
 
     if (cordova.plugins.backgroundMode.isActive()) {
       alert("Is now active!");
-
-
     }
     // cordova.plugins.backgroundMode is now available
   }, false);
-
-
-
 
   LoggedIn = JSON.parse(localStorage.getItem("LoggedIn"));
   if (!LoggedIn || !$rootScope.loggedIn) {
@@ -253,7 +235,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
    request.success(function (data) {
 
 
-     return $rootScope.projects;
+     return $rootScope.projects['pets'];
    });
    request.error(function (data) {
      console.log("error!");
@@ -325,6 +307,46 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     $state.go('tabsController.shop'); // redirect
   };
 
+  $rootScope.goToAchievements = function(){
+    $state.go('tabsController.achievements'); // redirect
+  };
+
+
+  /*
+  achievement_obj - use returned variable with pointer of ['achievement']
+
+  response['achievements']
+  */
+  $rootScope.earnedAchievement = function(achievement_obj) {
+    let achievements = achievement_obj['achievements'];
+    for (var i = 0; i < achievements.length; i++) {
+      if (achievements[i].achievement_earned) {
+        $rootScope.displayAchievement(
+          achievements[i].achievement_name,
+          achievements[i].achievement_description,
+          achievements[i].achievement_icon
+        );
+      }
+    }
+  }
+
+  $rootScope.displayAchievement = function(name, description, icon) {
+
+    var icon = '<img style="width:50%;" src="img/achievements/achievement_' + icon + '.png">';
+    var sub = '<h2 style="text-align:center;">' + name + '</h2><br><br><h3 style="text-align:center;">' + description+ '</h3>';
+
+    $ionicPopup.show({
+      template: icon,
+      title: "You've earned an achievement!",
+      subTitle: sub,
+      buttons: [{
+       text: 'Close',
+       type: 'gradient',
+       onTap: function (e) {}
+     }]
+   });
+  };
+
   $rootScope.fetchUserData = function() {
 
     LoggedIn = JSON.parse(localStorage.getItem("LoggedIn"));
@@ -352,6 +374,9 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
         $rootScope.level = "Level: " + level;
         $rootScope.id = data[0].player_id;
         $rootScope.local_chat_notifications = data[0].notifications;
+        $rootScope.experience_bar = data[0].player_experience_bar;
+
+        console.log($rootScope.experience_bar);
         localStorage.setItem("Id", data[0].player_ID);
 
         // inventory fetch..
@@ -505,7 +530,8 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     });
 
     request.success(function(data) {
-      $rootScope.project_variables = data[0]; // TODO might need to remove [0]
+      $rootScope.project_variables = data[0]['pets']; // TODO might need to remove [0]
+      console.log("THIS!");
       console.log($rootScope.project_variables);
 
 
@@ -1621,138 +1647,143 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
           // var with all projects to print in profile.html as ng-repeat
           // also works as a boolean to hide elements which should only be seen IF any projects has returned.
 
-          $scope.projects = data; // all data / all objects.. DONT specify
-          $rootScope.projects = data;
+          $scope.projects_full = data;
+          $scope.projects = data.pets; // only the pets.
+          $rootScope.projects = data.pets;
+
+
 
           if ($scope.projects.length === 0) {
             $scope.projects = false;
-          }
+          } else {
+            // assign
+            $scope.outgoing_projects = 0;
+            $scope.incoming_projects = 0;
+            $scope.shared_projects = 0;
 
-          // assign
-          $scope.outgoing_projects = 0;
-          $scope.incoming_projects = 0;
-          $scope.shared_projects = 0;
+            for (var i = 0; i < $scope.projects.length; i++) {
 
-          for (var i = 0; i < $scope.projects.length; i++) {
+              $scope.projects[i].player_avatar = $rootScope.build_avatar($scope.projects[i].player_avatar);
 
-            $scope.projects[i].player_avatar = $rootScope.build_avatar($scope.projects[i].player_avatar);
-
-            // check if the project has levled up.
-            if ($scope.projects[i].leveled_up === '1') {
-              if ($scope.projects[i].battle_ready === '1') {
-                $rootScope.popup_notice($scope.projects[i].name + ' has reached a new stage!', 'The pet is now ready for battle!');
-              } else {
-                 $rootScope.popup_notice($scope.projects[i].name + ' has reached a new stage!');
-              }
-
-            }
-
-
-            // at the same time as looping through,
-            // check if any battles are finished.
-
-            if ($scope.projects[i].battle_done === '1') {
-              // battle is done.
-              // fetch winner and resources.
-
-              $rootScope.subTitle = '';
-
-              // if you WON
-              if ($scope.projects[i].battle_winner === '1') {
-                // init array to store each resources AND bitfunds AND pet
-                $rootScope.resources_won = [];
-                // get BitFunds amount won
-                $rootScope.resources_won.push($scope.projects[i].battle_reward_bitfunds + " BitFunds");
-                if ($scope.projects[i].battle_reward_pet !== 0) {
-                  $rootScope.resources_won.push("Pet: " + $scope.projects[i].battle_reward_pet);
+              // check if the project has levled up.
+              if ($scope.projects[i].leveled_up === '1') {
+                if ($scope.projects[i].battle_ready === '1') {
+                  $rootScope.popup_notice($scope.projects[i].name + ' has reached a new stage!', 'The pet is now ready for battle!');
+                } else {
+                   $rootScope.popup_notice($scope.projects[i].name + ' has reached a new stage!');
                 }
 
-                // get all resources that server returned
-                for (var x = 0; x < $scope.projects[i].battle_reward_resources.all_battle_resources_won.length; x++) {
-                  if ($scope.projects[i].battle_reward_resources.all_battle_resources_won[x].success == 1) {
-                      $rootScope.resources_won.push($scope.projects[i].battle_reward_resources.all_battle_resources_won[x].battle_resource_won);
+              }
+
+
+              // at the same time as looping through,
+              // check if any battles are finished.
+
+              if ($scope.projects[i].battle_done === '1') {
+                // battle is done.
+                // fetch winner and resources.
+
+                $rootScope.subTitle = '';
+
+                // if you WON
+                if ($scope.projects[i].battle_winner === '1') {
+                  // init array to store each resources AND bitfunds AND pet
+                  $rootScope.resources_won = [];
+                  // get BitFunds amount won
+                  $rootScope.resources_won.push($scope.projects[i].battle_reward_bitfunds + " BitFunds");
+                  if ($scope.projects[i].battle_reward_pet !== 0) {
+                    $rootScope.resources_won.push("Pet: " + $scope.projects[i].battle_reward_pet);
+                  }
+
+                  // get all resources that server returned
+                  for (var x = 0; x < $scope.projects[i].battle_reward_resources.all_battle_resources_won.length; x++) {
+                    if ($scope.projects[i].battle_reward_resources.all_battle_resources_won[x].success == 1) {
+                        $rootScope.resources_won.push($scope.projects[i].battle_reward_resources.all_battle_resources_won[x].battle_resource_won);
+                    } else {
+                      // handle error.
+                    }
+
+                  }
+
+                  //$rootScope.popup_notice("Battle won","Your project " + $scope.projects[i].name + " won against " + $scope.projects[i].battle_winner_project_name_opponent + "\n\nYou've earned following resources!");
+
+                  // create templte for battle won. Check if its PvE or PvP
+                  if ($scope.projects[i].battle_pvp_pve == 'pvp') {
+                    $rootScope.subTitle = $scope.projects[i].name + " won against " + $scope.projects[i].battle_winner_project_name_opponent + "\n\nYou won " + $rootScope.resources_won.length + " resources!"
+                  } else if($scope.projects[i].battle_pvp_pve == 'pve') {
+                    $rootScope.subTitle = $scope.projects[i].name  + " won against bot" + "\n\nYou won " + $rootScope.resources_won.length + " resources!";
                   } else {
-                    // handle error.
+                    $rootScope.subTitle = 'error';
+                  }
+
+                  $ionicPopup.show({
+                    title: "Battle won!",
+                    template: $rootScope.subTitle,
+                    scope: $rootScope,
+                    buttons: [
+                      { text: 'Close' }, {
+                        text: '<b>View resources </b>',
+                        type: 'gradient',
+                        onTap: function(e) {
+                          $ionicPopup.show({
+                           template: '<ion-list>                                '+
+                                     '  <ion-item ng-repeat="resource in resources_won"> '+
+                                     '    {{resource}}                              '+
+                                     '  </ion-item>                             '+
+                                     '</ion-list>                               ',
+
+                           title: 'Following resources has been added to your pets inventory.',
+                           scope: $rootScope,
+                           buttons: [
+                             { type: 'gradient',
+                               text: 'Close' },
+                           ]
+                          });
+                        }
+                      }
+                    ]
+                  });
+                } else {
+
+                  if ($scope.projects[i].battle_pvp_pve == 'pvp') {
+                    subTitle = $scope.projects[i].battle_winner_project_name_opponent;
+                  } else if($scope.projects[i].battle_pvp_pve == 'pve') {
+                    $rootScope.subTitle = "bot";
+                  } else {
+                    $rootScope.subTitle = 'undefined';
+                  }
+
+                  if ($rootScope.projects[i].battle_looser_died === '1') {
+                      $rootScope.popup_notice("Battle lost","Your pet " + $scope.projects[i].name + " lost against " + $rootScope.subTitle + "\n\n Your pet survived!");
+                  } else {
+                      $rootScope.popup_notice("Battle lost","Your pet " + $scope.projects[i].name + " lost against " + $rootScope.subTitle + "\n\n Your pet has been terminated. If you possess a revival potion, you can use to to revive your pet.");
                   }
 
                 }
+              }
 
-                //$rootScope.popup_notice("Battle won","Your project " + $scope.projects[i].name + " won against " + $scope.projects[i].battle_winner_project_name_opponent + "\n\nYou've earned following resources!");
+              // before toggling sections. Sort Outgoing, incoming and shared.
+              // check if there is any outgoing/incoming or shared projects.
 
-                // create templte for battle won. Check if its PvE or PvP
-                if ($scope.projects[i].battle_pvp_pve == 'pvp') {
-                  $rootScope.subTitle = $scope.projects[i].name + " won against " + $scope.projects[i].battle_winner_project_name_opponent + "\n\nYou won " + $rootScope.resources_won.length + " resources!"
-                } else if($scope.projects[i].battle_pvp_pve == 'pve') {
-                  $rootScope.subTitle = $scope.projects[i].name  + " won against bot" + "\n\nYou won " + $rootScope.resources_won.length + " resources!";
-                } else {
-                  $rootScope.subTitle = 'error';
-                }
+              // outgoing
+              if (($scope.projects[i].player1 === username) && ($scope.projects[i].request_sent_by_player1 === '1') && ($scope.projects[i].player2_accepted === '-1' || $scope.projects[i].player2_accepted === '0')) {
+                $scope.outgoing_projects ++;
+              }
 
-                $ionicPopup.show({
-                  title: "Battle won!",
-                  template: $rootScope.subTitle,
-                  scope: $rootScope,
-                  buttons: [
-                    { text: 'Close' }, {
-                      text: '<b>View resources </b>',
-                      type: 'gradient',
-                      onTap: function(e) {
-                        $ionicPopup.show({
-                         template: '<ion-list>                                '+
-                                   '  <ion-item ng-repeat="resource in resources_won"> '+
-                                   '    {{resource}}                              '+
-                                   '  </ion-item>                             '+
-                                   '</ion-list>                               ',
+              // incoming
+              else if (($scope.projects[i].player2_accepted === '0') && ($scope.projects[i].player2 === username) && ($scope.projects[i].request_sent_by_player1 === '0')) {
+                $scope.incoming_projects ++;
+                  console.log($scope.incoming_projects);
+              }
 
-                         title: 'Following resources has been added to your pets inventory.',
-                         scope: $rootScope,
-                         buttons: [
-                           { type: 'gradient',
-                             text: 'Close' },
-                         ]
-                        });
-                      }
-                    }
-                  ]
-                });
-              } else {
-
-                if ($scope.projects[i].battle_pvp_pve == 'pvp') {
-                  subTitle = $scope.projects[i].battle_winner_project_name_opponent;
-                } else if($scope.projects[i].battle_pvp_pve == 'pve') {
-                  $rootScope.subTitle = "bot";
-                } else {
-                  $rootScope.subTitle = 'undefined';
-                }
-
-                if ($rootScope.projects[i].battle_looser_died === '1') {
-                    $rootScope.popup_notice("Battle lost","Your pet " + $scope.projects[i].name + " lost against " + $rootScope.subTitle + "\n\n Your pet survived!");
-                } else {
-                    $rootScope.popup_notice("Battle lost","Your pet " + $scope.projects[i].name + " lost against " + $rootScope.subTitle + "\n\n Your pet has been terminated. If you possess a revival potion, you can use to to revive your pet.");
-                }
-
+              // shared
+              else if ($scope.projects[i].player2_accepted === '1' || $scope.projects[i].player2 === '') {
+                $scope.shared_projects ++;
               }
             }
-
-            // before toggling sections. Sort Outgoing, incoming and shared.
-            // check if there is any outgoing/incoming or shared projects.
-
-            // outgoing
-            if (($scope.projects[i].player1 === username) && ($scope.projects[i].request_sent_by_player1 === '1') && ($scope.projects[i].player2_accepted === '-1' || $scope.projects[i].player2_accepted === '0')) {
-              $scope.outgoing_projects ++;
-            }
-
-            // incoming
-            else if (($scope.projects[i].player2_accepted === '0') && ($scope.projects[i].player2 === username) && ($scope.projects[i].request_sent_by_player1 === '0')) {
-              $scope.incoming_projects ++;
-                console.log($scope.incoming_projects);
-            }
-
-            // shared
-            else if ($scope.projects[i].player2_accepted === '1' || $scope.projects[i].player2 === '') {
-              $scope.shared_projects ++;
-            }
           }
+
+          $rootScope.earnedAchievement($scope.projects_full);
 
           $scope.toggle_project_sections();
         } else {
@@ -1822,7 +1853,7 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
         // create scope variables with params to be accessed from Project.HTML view.
 
         // push the fetched data to a variable for ProjectController to access
-        app.open_project = data[0];
+        app.open_project = data.pets[0];
 
         var redirect = true;
 
@@ -1836,7 +1867,7 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
 
         }
 
-        if (app.open_project.dead === '1') {
+        if (app.open_project.dead === 1) {
           //$rootScope.popup_notice(app.open_project.name + ' has died.');
 
           $ionicPopup.show({
@@ -1878,6 +1909,7 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
                               console.log(data);
                               if (data.success === 1) {
                                 $rootScope.popup_notice("You've successfully revived " + app.open_project.name);
+                                $state.reload();
                               } else if(data.success === 0) {
                                 $rootScope.popup_notice("Could not revive " + app.open_project.name, data.error_log);
                               }
@@ -2808,8 +2840,11 @@ $scope.feed = function(project_id,foodtype, foodtype_string) {
         $rootScope.reloadProject(function() {
            $rootScope.project_variables = $rootScope.project_variables;
        });
-        console.log($rootScope.project_variables);
-        console.log($rootScope.project_variables.foodtype_carrot);
+
+       console.log(response['achievement']);
+       $rootScope.earnedAchievement(response['achievement']);
+
+
       }
 
       if (response.success === 0) {
@@ -2883,9 +2918,54 @@ $scope.feed = function(project_id,foodtype, foodtype_string) {
     $scope.resources = true;
   };
 
+  $scope.purchase_attack = function(sql_name, name, cost) {
+
+    $ionicPopup.show({
+      title: 'Purchase ' + name + ' for ' + cost + ' BitFunds?',
+      subTitle: "This attack will only be usable with this pet.",
+      scope: $rootScope,
+      buttons: [
+        { text: 'Cancel' },
+        {
+          text: 'Purchase',
+          type: 'gradient',
+          onTap: function(e) {
+            obj = {
+              token: token,
+              username: username,
+              project_id: app.open_project.id,
+              sql_name: sql_name
+            };
+
+            var request = $http({
+              method: "post",
+              url: https_url + "/projects/project_attacks/unlock_attack.php",
+              data: obj,
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+
+            request.success(function(response) {
+              if (response.success === 1) {
+                $rootScope.popup_notice('Successfully purchased ' + name);
+
+                // recall the fetch_attacks.
+                $scope.get_attacks();
+                $state.reload();
+              }
+            });
+
+          }
+        }
+      ]
+    });
+
+
+  }
+
   $scope.get_attacks = function() {
 
     obj = {
+      username_request: username,
       token: token,
       project_id: app.open_project.id
     };
@@ -2894,45 +2974,72 @@ $scope.feed = function(project_id,foodtype, foodtype_string) {
 
     var request = $http({
       method: "post",
-      url: https_url + "/projects/project_attacks/attack_rules.php",
+      url: https_url + "/projects/project_attacks/fetch_attack_rules.php",
       data: obj,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
     request.success(function(response) {
       console.log(response);
-      console.log("shithead");
+
       /*
         response should contain all shit.
       */
 
+      // your pets current attacks.
       $scope.current_attacks = response[0];
 
-      for (var i = 0; i < $scope.current_attacks.length; i++) {
-        // parse them to ints.
-        $scope.current_attacks[i] = parseInt($scope.current_attacks[i]);
+      if ($scope.current_attacks !== null) {
+        for (var i = 0; i < $scope.current_attacks.length; i++) {
+          // parse them to ints.
+          $scope.current_attacks[i] = parseInt($scope.current_attacks[i]);
+        }
       }
 
       console.log($scope.current_attacks);
 
+      // all attacks.
       $scope.all_attacks = response[1];
+
+      console.log($scope.all_attacks[2]);
 
 
 
       for (var x = 0; x < $scope.all_attacks.length; x++) {
-        if ($scope.all_attacks[x].available == true) {
+        if ($scope.all_attacks[x].available === true) {
           // check if user owns it.
-          for (var i = 0; i < $scope.current_attacks.length; i++) {
-            if ($scope.current_attacks[i] == $scope.all_attacks.sql_name) {
-              console.log('yes!');
-            } else {
-              console.log($scope.current_attacks[i] + $scope.all_attacks.sql_name);
+
+          if (response[0] !== null) {
+
+            for (var attack in response[0]) {
+              if (response[0].hasOwnProperty(attack)) {
+                if (response[0][attack] === '1') {
+                  if (attack === $scope.all_attacks[x].sql_name) {
+                    $scope.all_attacks[x].available = false;
+                  }
+                }
+
+
+              }
             }
+
+            // for (i = 0; i < $scope.current_attacks.length; i++) {
+            //   if ($scope.current_attacks[i] === $scope.all_attacks.sql_name) {
+            //     console.log('yes!');
+            //   } else {
+            //     console.log($scope.current_attacks[i] + $scope.all_attacks.sql_name);
+            //   }
+            // }
           }
+
         } else {
-          console.log("noo");
+          // remove from array.
+          $scope.all_attacks.splice(x, 1);
         }
       }
+
+      $rootScope.all_attacks = $scope.all_attacks;
+      console.log($rootScope.all_attacks);
 
     });
   };
@@ -3203,8 +3310,60 @@ $scope.feed = function(project_id,foodtype, foodtype_string) {
 
 
   $scope.goTo = function(route) {
-    console.log("CLICK!");
     $state.go(route);
+  };
+}])
+
+.controller('achievementsController', ['$scope','$http', '$state' , '$rootScope', '$ionicPopup', function($scope, $http, $state, $rootScope, $ionicPopup) {
+  $scope.init = function() {
+    var obj = {
+      token: token, // TODO: Change this later to a more secure token ples.
+      username_request: username,
+    };
+
+    var request = $http({
+      method: "post",
+      url: https_url + "/achievements/fetch_achievements.php",
+      data: obj,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+
+    request.success(function (response) {
+      console.log(response);
+
+      if (response['success']) {
+        $scope.base_achievements = response['achievements']['achievements'];
+
+        if ($scope.base_achievements !== null || $scope.base_achievements.length > 0) {
+            $scope.switch_view('pets');
+        }
+      } else {
+        console.log("COULDNT LOAD ACHIEVEMENTS!");
+      }
+
+
+
+
+    });
+  };
+
+  $scope.switch_view = function(string) {
+    $scope.title = string;
+    $scope.achievements = $scope.base_achievements[string]
+    switch (string) {
+      case 'player':
+          $scope.player = true;
+          $scope.pets = false;
+          console.log($scope.player);
+        break;
+      case 'pets':
+          $scope.player = false;
+          $scope.pets = true;
+        break;
+    }
+
+    console.log($scope.achievements);
+
   };
 }])
 
