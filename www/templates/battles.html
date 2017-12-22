@@ -101,17 +101,32 @@
 
         </p>
         <i class="icon ion-ios-arrow-forward icon-accessory"></i>
-        <ion-option-button ng-if="item.can_sign == 0" class="button-assertive" ng-click="delete_battle(item.battle_id)">Delete Battle</ion-option-button>
+        <ion-option-button ng-if="item.can_sign === 0" class="button-assertive" ng-click="delete_battle(item.battle_id)">Delete Battle</ion-option-button>
+        <ion-option-button class="button-success" ng-click="view_battle(item.name, item.stage, item.battle_player1_attacks)">View setup</ion-option-button>
         <ion-option-button ng-disabled="item.can_sign === 0" class="button-stable" ng-click="enter_battle(item.battle_id,item.battle_id, item.name)">Enter</ion-option-button>
 
       </ion-item>
 
     </ion-list>
 
+    <script id='view_battle.html' type='text/ng-template'>
+      <ion-list>
+        <ion-checkbox ng-checked="true" ng-disabled="true" ng-repeat="attack in view_battle_data.attacks" class="wrapping-list">{{attack.attack_name}}</ion-checkbox>
+        <ion-list>
+    </script>
 
     <script id='projects_choose.html' type='text/ng-template'>
       <ion-list>
-        <ion-radio ng-repeat="item in projects" class="wrapping-list" ng-model="choice.value" ng-value="'{{item.id}}'">{{item.name}}</ion-radio>
+        <ion-radio ng-repeat="item in projects" ng-if="item.stage >= 2 && item.in_battle === '0'" class="wrapping-list" ng-model="choice.value" ng-value="'{{item.id}}'">{{item.name}} - stage {{item.stage}}</ion-radio>
+        <ion-radio disabled ng-repeat="item in projects" ng-if="item.stage < 2" class="wrapping-list" ng-model="choice.value" ng-value="'{{item.id}}'">{{item.name}} - stage {{item.stage}}</ion-radio>
+        <ion-list>
+    </script>
+
+    <script id='choose_attacks.html' type='text/ng-template'>
+      <ion-list>
+        <ion-checkbox ng-disabled="chosen_attacks.length >= 2" ng-repeat="item in project_attacks" ng-if="item.owned" ng-change="add_attack('{{item.name}}', $index)" class="wrapping-list" ng-model="attack.checked" ng-value="'{{item.id}}'">{{item.name}}</ion-checkbox>
+
+        <ion-checkbox style="background:#c5c5c5; " ng-disabled="true" ng-repeat="item in project_attacks" ng-if="item.owned === undefined" class="wrapping-list" ng-model="attack.checked" ng-value="'{{item.id}}'">{{item.name}} (locked)</ion-checkbox>
         <ion-list>
     </script>
 

@@ -216,7 +216,87 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
        console.log("error!");
      });
    });
+ };
 
+ $rootScope.get_attacks_by_id = function(project_id) {
+   $ionicLoading.hide();
+   obj = {
+     username_request: username,
+     token: token,
+     project_id: project_id
+   };
+
+   var request = $http({
+     method: 'POST',
+     url: https_url + "/projects/project_attacks/fetch_attack_rules.php",
+     data: obj,
+     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+   });
+
+   let all_attacks;
+
+   request.success(function(response) {
+     console.log(response);
+
+     /*
+       response should contain all shit.
+     */
+
+     // your pets current attacks.
+     let current_attacks = response[0];
+
+     if (current_attacks !== null) {
+       for (var i = 0; i < current_attacks.length; i++) {
+         // parse them to ints.
+         current_attacks[i] = parseInt(current_attacks[i]);
+       }
+     }
+
+     // all attacks.
+     all_attacks = response[1];
+
+     for (var x = 0; x < all_attacks.length; x++) {
+       if (!all_attacks[x].available) {
+         all_attacks.splice(x, 1);
+       }
+     }
+
+     let count_owned = 0;
+
+     for (x = 0; x < all_attacks.length; x++) {
+
+       if (response[0] !== null) {
+
+         for (var attack in response[0]) {
+           if (response[0].hasOwnProperty(attack)) {
+             if (response[0][attack] === '1') {
+
+               if (attack === all_attacks[x].sql_name) {
+                 count_owned++;
+                 all_attacks[x].owned = true;
+               }
+
+             }
+           }
+         }
+
+         // for (i = 0; i < $scope.current_attacks.length; i++) {
+         //   if ($scope.current_attacks[i] === $scope.all_attacks.sql_name) {
+         //     console.log('yes!');
+         //   } else {
+         //     console.log($scope.current_attacks[i] + $scope.all_attacks.sql_name);
+         //   }
+         // }
+       }
+
+
+     }
+
+     $rootScope.project_attacks = all_attacks;
+
+     console.log($rootScope.project_attacks);
+
+   });
 
  };
 
@@ -227,7 +307,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     };
     var request = $http({
       method: "post",
-      url: https_url + "/projects/fetch_projects.php",
+      url: https_url + "/projects/fetch_projects_beta.php",
       data: obj,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
    });
@@ -292,8 +372,6 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     data_append = '\n\n\n' + data_append;
     localStorage.setItem('Error_logs', errors + data_append);
   };
-
-
 
   $rootScope.goToSettings = function(){
     $state.go('tabsController.settings'); // redirect
@@ -524,7 +602,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
       var request = $http({
         method: "post",
-        url: https_url + "/projects/fetch_projects.php",
+        url: https_url + "/projects/fetch_projects_beta.php",
         data: obj,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
@@ -1252,7 +1330,7 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
       $ionicLoading.hide();
       // user fetch
       if (data[0].success == 1) {
-
+        console.log(data);
         $scope.battles = data;
 
         // check if any battles are any of your projects.
@@ -1260,6 +1338,12 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
 
         for (var i = 0; i < $scope.projects.length; i++) {
           for (var j = 0; j < $scope.battles.length; j++) {
+            // json.parse the attacks as well.
+            if ($scope.battles[j].battle_player1_attacks !== null) {
+              console.log($scope.battles[j].battle_player1_attacks);
+              $scope.battles[j].battle_player1_attacks = JSON.parse($scope.battles[j].battle_player1_attacks);
+            }
+
             if ($scope.projects[i].id === $scope.battles[j].battle_player1_project_id) {
               $scope.battles[j].can_sign = 0;
             }
@@ -1271,6 +1355,8 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
       } else {
         $scope.empty_battles = false;
       }
+
+      console.log($scope.battles);
 
     });
     request.error(function(){
@@ -1301,11 +1387,69 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
     value: 'pve', // bitfunds select
   };
 
+  $rootScope.battle_params = {};
+
+  $scope.view_battle = function(project_name, stage, attacks) {
+
+    $rootScope.view_battle_data = {
+      project_name: project_name,
+      stage: stage,
+      attacks: attacks
+    };
+
+    $ionicPopup.show({
+      title: project_name + " - stage: " + stage,
+      templateUrl:'view_battle.html',
+      scope: $rootScope,
+      buttons: [{
+        text: 'Close',
+        type: 'gradient',
+        onTap: function (e) {
+        }
+      }]
+    });
+  }
+
+  $scope.new_battle = function() {
+    $rootScope.battle_params = {}; // clear
+
+    $ionicPopup.show({
+      title:'Select pet to sign with',
+      templateUrl:'projects_choose.html',
+      scope: $rootScope,
+      buttons: [{
+        text: 'Cancel',
+        type: 'button-default',
+        onTap: function (e) {
+
+        }
+       }, {
+       text: 'Continue',
+       type: 'gradient',
+       onTap: function (x) {
+         var next = false;
+          //$scope.validate_project(null,$scope.choice.value, null, null, 'new_battle');
+          $rootScope.battle_params.battle_action = 'new_battle';
+          $rootScope.battle_params.project_id = $scope.choice.value;
+
+          $ionicLoading.show({
+            template: '<ion-spinner icon="bubbles"></ion-spinner><br/>Loading...',
+          });
+
+          $rootScope.get_attacks_by_id($scope.choice.value);
+          $scope.choose_attacks();
+
+          //$scope.create_battle();
+       }
+     }]
+    });
+  };
 
   $scope.enter_battle = function(battle_id,project_opponent_id, project_opponent_name){
+    $rootScope.battle_params = {}; // clear
 
      $ionicPopup.show({
-       title:'Select a project to enter with',
+       title:'Select a pet to enter with',
        templateUrl:'projects_choose.html',
        scope: $rootScope,
        buttons: [{
@@ -1319,16 +1463,87 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
         type: 'gradient',
         onTap: function (e) {
           console.log($scope.choice.value);
-          $scope.validate_project(battle_id,$scope.choice.value, project_opponent_id, project_opponent_name, 'enter_battle');
+          //$scope.validate_project(battle_id,$scope.choice.value, project_opponent_id, project_opponent_name, 'enter_battle');
+          let project_id = $scope.choice.value;
+          $rootScope.get_attacks_by_id(project_id);
+
+          $rootScope.battle_params = {
+            project_id: project_id,
+            battle_id: battle_id,
+            project_opponend_id: project_opponent_id,
+            project_opponend_name: project_opponent_name,
+            battle_action: 'enter_battle'
+          };
+
+          $scope.choose_attacks();
         }
       }]
      });
    };
 
-   $scope.new_battle = function() {
+
+   // init array to store users picked attacks.
+   $rootScope.chosen_attacks = [];
+
+   $rootScope.add_attack = function(attack_name, attack_id) {
+     console.log(attack_id);
+     console.log(attack_name);
+
+     let exists =  false;
+     for (var i = 0; i < $rootScope.chosen_attacks.length; i++) {
+       if ($rootScope.chosen_attacks[i].attack_id === attack_id) {
+         exists =  true;
+         $rootScope.chosen_attacks.splice(i, 1);
+       }
+     }
+
+     if (!exists) {
+       $rootScope.chosen_attacks.push
+       ({
+         'attack_name': attack_name,
+         'attack_id': attack_id
+      })
+    }
+  };
+
+
+   $scope.choose_attacks = function() {
+     $rootScope.chosen_attacks = []; // clear
+     $rootScope.get_attacks_by_id($rootScope.battle_params.project_id);
      $ionicPopup.show({
-       title:'Select pet to sign with',
-       templateUrl:'projects_choose.html',
+       title:'Pick 2 attacks',
+       templateUrl:'choose_attacks.html',
+       scope: $rootScope,
+       buttons: [{
+         text: 'Cancel',
+         type: 'button-default',
+         onTap: function (e) {
+           $rootScope.project_attacks = null;
+         }
+        }, {
+        text: 'Next',
+        type: 'gradient',
+        onTap: function (e) {
+          console.log($scope.choice.value);
+
+          $rootScope.battle_params['attacks'] = $rootScope.chosen_attacks;
+
+          if ($rootScope.battle_params.battle_action === "new_battle") {
+            $scope.create_battle();
+          } else {
+            $scope.http_battle();
+          }
+
+        }
+      }]
+     });
+   }
+
+   $scope.create_battle = function() {
+     $ionicPopup.show({
+       title:'Select PvE or PvP',
+       subTitle: "Player versus Enviroment or Player versus Player.",
+       templateUrl:'pve_pvp_choose.html',
        scope: $rootScope,
        buttons: [{
          text: 'Cancel',
@@ -1337,148 +1552,136 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
 
          }
         }, {
-        text: 'Validate pet',
+        text: 'Continue',
         type: 'gradient',
-        onTap: function (x) {
-          var next = false;
-           $scope.validate_project(null,$scope.choice.value, null, null, 'new_battle');
+        onTap: function (e) {
+          console.log($scope.pvp_pve.value);
+
+          // pve -> bot
+         if ($scope.pvp_pve.value == 'pve') {
+
+           $ionicPopup.show({
+             title:'Bet your battle',
+             subTitle: "The higher awards, the higher chance of loosing. If you loose your pet might die!",
+             templateUrl:'rewards_choose.html',
+             scope: $rootScope,
+             buttons: [{
+               text: 'Cancel',
+               type: 'button-default',
+               onTap: function (e) {
+
+               }
+              }, {
+              text: 'Create battle',
+              type: 'gradient',
+              onTap: function (e) {
+                console.log("Project: " + $scope.choice.value + " BitFunds amount:" + $scope.bitfunds.value +  "Pet translat" + $scope.pet.value);
+                $rootScope.battle_params['bitfunds_reward'] = $scope.bitfunds.value;
+                $rootScope.battle_params['pet_reward'] = $scope.pet.value;
+                $rootScope.battle_params['pvp_pve'] = $scope.pvp_pve.value;
+
+                $scope.http_battle();
+
+              }
+            }]
+          });
+
+        } else if($scope.pvp_pve.value == 'pvp'){
+           // pvp -> multiplayer
+
+           $ionicPopup.show({
+             title:'Select winner rewards',
+             subTitle: 'The winner of the battle will recieve your chosen rewards.',
+             templateUrl:'rewards_choose.html',
+             scope: $rootScope,
+             buttons: [{
+               text: 'Cancel',
+               type: 'button-default',
+               onTap: function (e) {
+
+               }
+              }, {
+              text: 'Create battle',
+              type: 'gradient',
+              onTap: function (e) {
+
+                $rootScope.battle_params['bitfunds_reward'] = $scope.bitfunds.value;
+                $rootScope.battle_params['pet_reward'] = $scope.pet.value;
+                $rootScope.battle_params['pvp_pve'] = $scope.pvp_pve.value;
+                $scope.http_battle();
+
+              }
+            }]
+          });
+         }
+
         }
       }]
-     });
-   };
+   });
+   }
 
   // check if your chosen project is validated for battles. Works for both "new_battle" && sign up
-  $scope.validate_project = function(battle_id,project_id, project_opponent_id, project_opponent_name, battle_action) {
-    for (var i = 0; i < $rootScope.projects.length; i++) {
-      console.log($rootScope.projects[i].name);
-      if ($rootScope.projects[i].id === project_id) {
-        if ($rootScope.projects[i].in_battle === '0') {
-          if (($rootScope.projects[i].stage >= '2' && ($rootScope.projects[i].dead == '0') || ($rootScope.projects[i].player2_accepted == '1' && $rootScope.projects[i].player2 === '') || ($rootScope.projects[i].player2_accepted == '0' && $rootScope.projects[i].player2 !== ''))) {
-            if (battle_action === 'enter_battle') {
-                $scope.http_battle(battle_id, project_id, project_opponent_id, project_opponent_name, battle_action);
-            } else if(battle_action === 'new_battle') {
+  // $scope.validate_project = function(battle_id,project_id, project_opponent_id, project_opponent_name, battle_action) {
+  //   for (var i = 0; i < $rootScope.projects.length; i++) {
+  //     console.log($rootScope.projects[i].name);
+  //     if ($rootScope.projects[i].id === project_id) {
+  //       if ($rootScope.projects[i].in_battle === '0') {
+  //         if (($rootScope.projects[i].stage >= '2' && ($rootScope.projects[i].dead == '0') || ($rootScope.projects[i].player2_accepted == '1' && $rootScope.projects[i].player2 === '') || ($rootScope.projects[i].player2_accepted == '0' && $rootScope.projects[i].player2 !== ''))) {
+  //           if (battle_action === 'enter_battle') {
+  //               $scope.http_battle(battle_id, project_id, project_opponent_id, project_opponent_name, battle_action);
+  //           } else if(battle_action === 'new_battle') {
+  //
+  //
+  //
+  //
+  //
+  //           } else {
+  //             $ionicPopup.show({
+  //               title: 'Error: No target for $scope.validate_project(->battle_action) ',
+  //               buttons: [{
+  //                text: 'Close',
+  //                type: 'gradient',
+  //                onTap: function (e) {
+  //                }
+  //              }]
+  //            });
+  //           }
+  //
+  //         } else {
+  //           $rootScope.popup_notice($rootScope.projects[i].name + ' is not suitable for battles yet.');
+  //         }
+  //       } else {
+  //         $rootScope.popup_notice($rootScope.projects[i].name + ' is already signed up for a battle.');
+  //
+  //       }
+  //       break;
+  //     }
+  //   }
+  // };
 
-              $ionicPopup.show({
-                title:'Select PvE or PvP',
-                subTitle: "Player versus Enviroment or Player versus Player.",
-                templateUrl:'pve_pvp_choose.html',
-                scope: $rootScope,
-                buttons: [{
-                  text: 'Cancel',
-                  type: 'button-default',
-                  onTap: function (e) {
-
-                  }
-                 }, {
-                 text: 'Continue',
-                 type: 'gradient',
-                 onTap: function (e) {
-                   console.log($scope.pvp_pve.value);
-
-                   // pve -> bot
-                  if ($scope.pvp_pve.value == 'pve') {
-
-                    $ionicPopup.show({
-                      title:'Bet your battle',
-                      subTitle: "The higher awards, the higher chance of loosing. If you loose your pet might die!",
-                      templateUrl:'rewards_choose.html',
-                      scope: $rootScope,
-                      buttons: [{
-                        text: 'Cancel',
-                        type: 'button-default',
-                        onTap: function (e) {
-
-                        }
-                       }, {
-                       text: 'Create battle',
-                       type: 'gradient',
-                       onTap: function (e) {
-                         console.log("Project: " + $scope.choice.value + " BitFunds amount:" + $scope.bitfunds.value +  "Pet translat" + $scope.pet.value);
-                         $scope.http_battle(battle_id, project_id, project_opponent_id, project_opponent_name, battle_action, $scope.bitfunds.value, $scope.pet.value, $scope.pvp_pve.value);
-
-                       }
-                     }]
-                   });
-
-                 } else if($scope.pvp_pve.value == 'pvp'){
-                    // pvp -> multiplayer
-
-                    $ionicPopup.show({
-                      title:'Select winner rewards',
-                      subTitle: 'The winner of the battle will recieve your chosen rewards.',
-                      templateUrl:'rewards_choose.html',
-                      scope: $rootScope,
-                      buttons: [{
-                        text: 'Cancel',
-                        type: 'button-default',
-                        onTap: function (e) {
-
-                        }
-                       }, {
-                       text: 'Create battle',
-                       type: 'gradient',
-                       onTap: function (e) {
-                         console.log("Project: " + $scope.choice.value + " BitFunds amount:" + $scope.bitfunds.value +  "Pet translat" + $scope.pet.value);
-                         $scope.http_battle(battle_id, project_id, project_opponent_id, project_opponent_name, battle_action, $scope.bitfunds.value, $scope.pet.value, $scope.pvp_pve.value);
-
-                       }
-                     }]
-                   });
-                  }
-
-                 }
-               }]
-            });
-
-
-
-            } else {
-              $ionicPopup.show({
-                title: 'Error: No target for $scope.validate_project(->battle_action) ',
-                buttons: [{
-                 text: 'Close',
-                 type: 'gradient',
-                 onTap: function (e) {
-                 }
-               }]
-             });
-            }
-
-          } else {
-            $rootScope.popup_notice($rootScope.projects[i].name + ' is not suitable for battles yet.');
-          }
-        } else {
-          $rootScope.popup_notice($rootScope.projects[i].name + ' is already signed up for a battle.');
-
-        }
-        break;
-      }
-    }
-  };
-
-  $scope.http_battle = function(battle_id, project_id, project_opponent_id, project_opponent_name, battle_action, winner_reward_bitfunds = null, winner_reward_pet = null, pvp_pve = null) {
+  $scope.http_battle = function() {
 
     var username =  localStorage.getItem("Username");
     var player_id = localStorage.getItem("Id");
+    console.log($rootScope.chosen_attacks);
 
     var obj = {
       token: token,
-      battle_id: battle_id, // the id of the battle.
-      project_id: project_id, // id of project signing up
+      battle_id: $rootScope.battle_params.battle_id, // the id of the battle.
+      project_id: $rootScope.battle_params.project_id, // id of project signing up
       username_signing: username,
       id_signing: player_id,
-      winner_reward_pet: winner_reward_pet,
-      winner_reward_bitfunds: winner_reward_bitfunds,
-      pvp_pve: pvp_pve
-     };
+      winner_reward_pet: $rootScope.battle_params.pet_reward,
+      winner_reward_bitfunds: $rootScope.battle_params.bitfunds_reward,
+      pvp_pve: $rootScope.battle_params.pvp_pve,
+      attacks: JSON.stringify($rootScope.battle_params.attacks)
+    };
 
-     console.log(winner_reward_pet +  winner_reward_bitfunds);
-
-     console.log(obj);
+    console.log(obj);
 
     var request = $http({
       method: "post",
-      url: https_url + "/battles/" + battle_action + ".php",
+      url: https_url + "/battles/" + $rootScope.battle_params.battle_action + ".php",
       data: obj,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
@@ -1490,26 +1693,19 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
       // user fetch
       if (data.success === 1) {
 
-        //$rootScope.push_shit('battle'+Math.floor((Math.random() * 10) + 1), data.battle_until, 'Your pet has returned from a battle', '', 1);
-
-
-
-        switch (battle_action) {
+        switch ($rootScope.battle_params.battle_action) {
           case 'new_battle':
 
           $scope.fetchBattles();
           $state.reload();
           $ionicLoading.show({
             template: 'Battle has been created',
-            duration: 1500
+            duration: 3000
           });
-
-
           break;
-
           case 'enter_battle':
             $ionicPopup.show({
-              title : 'signed up for battle against ' + project_opponent_name,
+              title : 'signed up for battle against ' + $rootScope.battle_params.project_opponent_name,
               subTitle: 'Your pet is now in battle. Check back later to view the winner',
               buttons: [{
                text: 'Close',
@@ -1630,7 +1826,7 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
       var request = $http({
         token: token,
         method: "post",
-        url: https_url + "/projects/fetch_projects.php",
+        url: https_url + "/projects/fetch_projects_beta.php",
         data: obj,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
@@ -1842,7 +2038,7 @@ function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionic
 
       var request = $http({
         method: "post",
-        url: https_url + "/projects/fetch_projects.php",
+        url: https_url + "/projects/fetch_projects_beta.php",
         data: obj,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
@@ -2949,7 +3145,7 @@ $scope.feed = function(project_id,foodtype, foodtype_string) {
                 $rootScope.popup_notice('Successfully purchased ' + name);
 
                 // recall the fetch_attacks.
-                $scope.get_attacks();
+                $scope.get_attacks_by_id(app.open_project.id);
                 $state.reload();
               }
             });
@@ -2958,98 +3154,14 @@ $scope.feed = function(project_id,foodtype, foodtype_string) {
         }
       ]
     });
-
-
   }
-
-  $scope.get_attacks = function() {
-
-    obj = {
-      username_request: username,
-      token: token,
-      project_id: app.open_project.id
-    };
-
-    console.log(obj);
-
-    var request = $http({
-      method: "post",
-      url: https_url + "/projects/project_attacks/fetch_attack_rules.php",
-      data: obj,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
-
-    request.success(function(response) {
-      console.log(response);
-
-      /*
-        response should contain all shit.
-      */
-
-      // your pets current attacks.
-      $scope.current_attacks = response[0];
-
-      if ($scope.current_attacks !== null) {
-        for (var i = 0; i < $scope.current_attacks.length; i++) {
-          // parse them to ints.
-          $scope.current_attacks[i] = parseInt($scope.current_attacks[i]);
-        }
-      }
-
-      console.log($scope.current_attacks);
-
-      // all attacks.
-      $scope.all_attacks = response[1];
-
-      console.log($scope.all_attacks[2]);
-
-
-
-      for (var x = 0; x < $scope.all_attacks.length; x++) {
-        if ($scope.all_attacks[x].available === true) {
-          // check if user owns it.
-
-          if (response[0] !== null) {
-
-            for (var attack in response[0]) {
-              if (response[0].hasOwnProperty(attack)) {
-                if (response[0][attack] === '1') {
-                  if (attack === $scope.all_attacks[x].sql_name) {
-                    $scope.all_attacks[x].available = false;
-                  }
-                }
-
-
-              }
-            }
-
-            // for (i = 0; i < $scope.current_attacks.length; i++) {
-            //   if ($scope.current_attacks[i] === $scope.all_attacks.sql_name) {
-            //     console.log('yes!');
-            //   } else {
-            //     console.log($scope.current_attacks[i] + $scope.all_attacks.sql_name);
-            //   }
-            // }
-          }
-
-        } else {
-          // remove from array.
-          $scope.all_attacks.splice(x, 1);
-        }
-      }
-
-      $rootScope.all_attacks = $scope.all_attacks;
-      console.log($rootScope.all_attacks);
-
-    });
-  };
 
   $scope.switch_view = function(string) {
 
     switch (string) {
       case 'attacks':
           $scope.title = 'Attacks';
-          $scope.get_attacks();
+          $rootScope.get_attacks_by_id(app.open_project.id);
           $scope.attacks = true;
           $scope.resources = false;
 

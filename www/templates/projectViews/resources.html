@@ -17,7 +17,7 @@
         <div class="item item-divider">
           Available attacks & spells
         </div>
-        <div ng-repeat="item in all_attacks" ng-if="item.available" class="item item-avatar item-button-right">
+        <div ng-repeat="item in project_attacks" ng-if="item.available && !item.owned" style="white-space: initial;" class="item item-avatar item-button-right">
             <img src="{{item.img_src}}">
             <h2>{{item.name}}</h2>
             <p style="white-space: initial;">
@@ -59,13 +59,19 @@
             <button ng-if="!item.cost" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon">In progress</button>
         </div>
 
-        <div ng-repeat="item in all_attacks" ng-if="!item.available" style="background: #e0e0e0;" class="item item-avatar item-button-right">
+        <div ng-repeat="item in project_attacks" ng-if="item.owned" style="background: #e0e0e0;    white-space: initial;" class="item item-avatar item-button-right">
           <img src="{{item.img_src}}">
             <h2>{{item.name}}</h2>
             <p style="white-space: initial;">
               {{item.description}}
             </p>
             <br>
+            <div ng-if="item.cost === false">
+                <a style="color: green;" class="ion-help" style="white-space: initial;"> Earned by completing: '{{item.achievement}}' achievement</a>
+            </div>
+            <div ng-if="item.cost > 0">
+              <a class="ion-cash"> {{item.cost}}</a>
+            </div>
             <br>
             <h3>Stats:</h3>
 
