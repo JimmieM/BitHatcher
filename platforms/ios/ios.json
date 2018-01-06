@@ -1,0 +1,55 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {
+      "config.xml": {
+        "parents": {
+          "/*": [
+            {
+              "xml": "<feature name=\"SpinnerDialog\"><param name=\"ios-package\" value=\"CDVSpinnerDialog\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"AppPreferences\"><param name=\"ios-package\" value=\"AppPreferences\" /></feature>",
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "installed_plugins": {
+    "com.filfatstudios.spinnerdialog": {
+      "PACKAGE_NAME": "io.ionic.starter"
+    },
+    "cordova-plugin-app-preferences": {
+      "PACKAGE_NAME": "io.ionic.starter"
+    }
+  },
+  "dependent_plugins": {},
+  "modules": [
+    {
+      "id": "com.filfatstudios.spinnerdialog.SpinnerDialog",
+      "file": "plugins/com.filfatstudios.spinnerdialog/www/SpinnerDialog.js",
+      "pluginId": "com.filfatstudios.spinnerdialog",
+      "clobbers": [
+        "SpinnerDialog"
+      ]
+    },
+    {
+      "id": "cordova-plugin-app-preferences.apppreferences",
+      "file": "plugins/cordova-plugin-app-preferences/www/apppreferences.js",
+      "pluginId": "cordova-plugin-app-preferences",
+      "clobbers": [
+        "plugins.appPreferences"
+      ]
+    }
+  ],
+  "plugin_metadata": {
+    "com.filfatstudios.spinnerdialog": "1.0.2",
+    "cordova-plugin-app-preferences": "0.99.3"
+  }
+}

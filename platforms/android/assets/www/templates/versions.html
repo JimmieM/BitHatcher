@@ -1,0 +1,22 @@
+<!-- standalone project view -->
+<ion-view ng-controller="versionsController" ng-init="load_versions()" title="Versions" id="page2">
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+      <ion-nav-back-button class="button-icon ion-ios-arrow-left">
+      </ion-nav-back-button>
+    </ion-nav-bar>
+
+  <ion-content padding="true" class="has-header">
+  <div class="list">
+
+    <div class="item item-divider">
+      Public versions
+    </div>
+
+    <a ng-click="show_version('{{version.version_number}}', '{{version.published_at}}');" ng-repeat="version in versions" class="item" href="">
+      Version: {{version.version_number}}
+    </a>
+
+</div>
+
+  </ion-content>
+</ion-view>

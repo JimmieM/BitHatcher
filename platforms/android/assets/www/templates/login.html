@@ -1,0 +1,27 @@
+<ion-view title="Login" id="page5">
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+    <ion-nav-back-button class="button-icon ion-ios-arrow-left">
+    </ion-nav-back-button>
+    <ion-nav-buttons side="right">
+    </ion-nav-buttons>
+  </ion-nav-bar>
+
+  <ion-content ng-controller="loginController" ng-init="load_init()" padding="true" class="has-header">
+    <form  id="login-form4" class="list">
+      <img style="width: 100%;    padding: 5% 35% 5% 35%;" src="img/logo.png" class="fullsize-image" alt="">
+      <ion-list id="login-list6">
+        <label class="item item-input username" id="login-input3">
+          <span class="input-label">Username</span>
+          <input type="text" id="username_login" name="username" placeholder="" value="jimmie" ng-model="username"/>
+        </label>
+        <label class="item item-input password" id="login-input4">
+          <span class="input-label">Password</span>
+          <input type="password" id="password_login" name="password" placeholder="" value="hej123" ng-model="password"/>
+        </label>
+      </ion-list>
+      <div class="spacer" style="height: 40px;"></div>
+      <button ng-click="login(username,password)" id="login-button" class="button button-block gradient">Log in</button>
+      <a style="color:black;" ng-click="gotoSignup()" id="login-button3" class="button button-block button-clear">Or create an account</a>
+    </form>
+  </ion-content>
+</ion-view>

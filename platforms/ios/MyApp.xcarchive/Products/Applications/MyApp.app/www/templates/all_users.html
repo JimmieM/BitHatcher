@@ -1,0 +1,56 @@
+<ion-view ng-controller="allUsersController" title="{{title}}" id="page4">
+
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+        <ion-nav-back-button class="button-icon ion-ios-arrow-left">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="right">
+          <!--<button ng-controller="projectsController" ng-click="goToSettings()" style="color: white;border: 1px solid white;border-radius: 0;" class="button button-outline icon-right ion-navicon">Settings</button>-->
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+  <ion-content padding="true" class="has-header">
+
+    <ion-refresher
+      pulling-text="Update..."
+      on-refresh="switch_view(users_view);">
+    </ion-refresher>
+
+
+    <div class="button-bar">
+      <a class="button gradient" ng-class="{'active': users_view == 'all_users'}" ng-click="switch_view('all_users')">All users</a>
+      <a class="button gradient" ng-class="{'active': users_view == 'friends'}" ng-click="switch_view('friends')">Friends</a>
+    </div>
+
+    <h3 ng-if="!success">{{error}}</h3>
+    <div class="list" ng-if="success">
+
+
+      <div style="padding:0;" class="bar item-input-inset bar-light">
+        <label class="item-input-wrapper">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="search" ng-model="query" placeholder="{{search}}..." value="">
+        </label>
+      </div>
+
+      <a ng-if="user.chat_notifications > 0" ng-click="enterChat('{{user.username}}');"  ng-repeat="user in all_users | filter: query" class="item item-avatar item-icon-right">
+        <img ng-if="user.is_online === 1" style="border-radius: 50%; width: 50%; border: 2px solid rgb(7, 218, 113);" src="img/avatar/{{user.avatar}}.png">
+        <img ng-if="user.is_online === 0" style="border-radius: 50%;width: 50%;border: 2px solid #ef473a;" src="img/avatar/{{user.avatar}}.png">
+        <h2>{{user.username}}</h2>
+
+        <i style="color: #00e0b2;" class="icon ion-ios-chatbubble"><span style="font-size:19px;" ng-if="user.chat_notifications > 0">{{user.chat_notifications}}</span></i>
+      </a>
+
+    <a ng-if="user.chat_notifications == 0" ng-click="enterChat('{{user.username}}');"  ng-repeat="user in all_users | filter: query" class="item item-avatar item-icon-right">
+      <img ng-if="user.is_online === 1" style="border-radius: 50%; width: 50%; border: 2px solid rgb(7, 218, 113);" src="img/avatar/{{user.avatar}}.png">
+      <img ng-if="user.is_online === 0" style="border-radius: 50%;width: 50%;border: 2px solid #ef473a;" src="img/avatar/{{user.avatar}}.png">
+      <h2>{{user.username}}</h2>
+
+      <i style="color: #00e0b2;" class="icon ion-ios-chatbubble"><span ng-if="user.chat_notifications > 0">{{user.chat_notifications}}</span></i>
+
+    </a>
+
+</div>
+  </ion-content>
+
+  </ion-card>
+</ion-view>
