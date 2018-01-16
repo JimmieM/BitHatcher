@@ -1,4 +1,4 @@
-<ion-view ng-controller="chatController" ng-init="init()" title="{{chatting_with}}" id="page4">
+<ion-view ng-controller="chatController" ng-init="init()" title="{{chat.player2}}" id="page4">
 
   <ion-nav-bar class="bar-balanced gradient" align-title="center">
         <ion-nav-back-button class="button-icon ion-ios-arrow-left">
@@ -9,11 +9,18 @@
     </ion-nav-bar>
 
   <ion-content padding="true" class="has-header">
+
+    <ion-refresher ng-if="localChat.length > 0"
+      pulling-text="Load more..."
+      on-refresh="loadMore()">
+    </ion-refresher>
+
     <div class="list">
 
     <ion-list style="margin-bottom: 15%;" class="row">
 
-    <h3 ng-if="chat.length === 0">Send a 🖐 to {{chatting_with}}</h3>
+    <h3 ng-if="localChat.length === 0">Send a 🖐 to {{chatting_with}}</h3>
+
 
     <ion-item ng-repeat="x in localChat | orderBy: 'date'" class="item-avatar item-icon-right" id="profile-list-item6">
       <img src="{{x.player_avatar}}">
@@ -26,15 +33,6 @@
       <ion-option-button class="gradient">{{x.date}}</ion-option-button>
     </ion-item>
   </ion-list>
-
-    <!-- RECIEVER -->
-    <!-- <a ng-repeat="y in to | orderBy: 'date'" class="item item-avatar item-button-right">
-      <img src="{{y.player_avatar}}">
-      <h2>{{y.from_username}}</h2>
-      <p>{{y.message}}</p>
-      <span>{{y.date}}</span>
-    </a> -->
-
 </div>
 
   </ion-content>

@@ -70,6 +70,26 @@ angular.module('app.features.controllers').controller('loginController', ['$scop
 
               console.log("Avatar signing in: " + avatar);
               window.localStorage.setItem("Avatar", avatar);
+
+              var obj = {
+                  token: token,
+                  username: username,
+                  platform: 'android',
+                  registration_token: token
+               };
+
+               console.log(obj);
+
+                var request = $http({
+                  method: "post",
+                  url: https_url + "/users/register_notifications.php",
+                  data: obj,
+                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+              });
+
+              request.success(function (data) {
+                console.log("Successfully uploaded token, boi!");
+              });
             } catch (e) {
 
               $rootScope.popup_notice('Error!');

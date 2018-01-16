@@ -30,12 +30,15 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
     $ionicScrollDelegate.scrollTop();
   };
 
-  $scope.fetchMessages = function() {
+  $scope.fetchMessages = function(amount = 20) {
+    console.log(amount);
+    console.log($scope.localChat);
     var obj = {
       token: token,
       username_request: $rootScope.username,
       player2: $rootScope.chat.player2,
-      chat_token: $scope.localChat_token
+      chat_token: $scope.localChat_token,
+      amount: amount
      };
      console.log(obj);
 
@@ -64,7 +67,13 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
             $scope.localChat_token = data.current_token;
 
             $scope.localChat = data.chats;
-            $ionicScrollDelegate.scrollBottom();
+
+            // if the param amount is less than 20, then its probably not a "load more", but the first load of the view
+            // then, scroll to bottom - else, let the user read the loaded messages.
+            if (amount <= 20) {
+                $ionicScrollDelegate.scrollBottom();
+            }
+
 
           } else {
             $scope.localChat;
@@ -83,12 +92,21 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
       $rootScope.popup_notice('There was an error', data);
 
     });
+    request.finally(function() {
+      $rootScope.$broadcast('scroll.refreshComplete'); // release refresh
+    });
 
     // if ($rootScope.chat.player2 !== '') {
     //   setTimeout($scope.loadMessages, 3000);
     // }
 
   };
+
+  var clicked = 1;
+  $scope.loadMore = function() {
+    console.log(clicked);
+    $scope.fetchMessages((clicked++) * 20);
+  }
 
   $scope.loadMessages = function() {
     if ($rootScope.chat.player2 !== '') {

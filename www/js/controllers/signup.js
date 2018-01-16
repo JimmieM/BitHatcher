@@ -29,6 +29,10 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
     $scope.gender_img = 'img/avatar/' + $scope.gender_img + '.png';
   };
 
+  $scope.goToTerms = function() {
+    $state.go('terms');
+  }
+
   $scope.validateEmail = function(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
@@ -80,7 +84,7 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
             platform: $scope.platform,
             gender: $scope.signup_gender.index
          };
-
+1
          console.log(obj);
 
           var request = $http({

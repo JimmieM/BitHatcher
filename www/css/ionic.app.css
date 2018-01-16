@@ -7848,6 +7848,11 @@ input[type="checkbox"][readonly] {
  * Checkbox
  * --------------------------------------------------
  */
+
+ .item .item-checkbox .ng-valid .ng-not-empty > .item-content .disable-pointer-events > span {
+   white-space: initial;
+ }
+
 .checkbox {
   position: relative;
   display: inline-block;

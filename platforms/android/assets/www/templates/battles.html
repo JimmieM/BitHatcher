@@ -82,14 +82,12 @@
           <span ng-if="item.player2 !== ''">and</span>
           <a href="#" ng-click="view_player_profile({{item.player_id}})"> {{item.player2}}</a>
           <br>
-          <!-- Stage: {{item.stage}} -->
-
-          <p class="ion-ios-clock-outline"> {{item.battle_signed_up_date}}</p>
+          Pet stage: {{item.stage}}
           <br>
 
 
           <h3>Winner's rewards:</h3>
-          <p ng-if="item.battle_winner_reward_pet !== '0'" class="ion-ios-paw"> {{item.battle_winner_reward_pet}}</p>
+          <p ng-if="item.battle_winner_reward_pet != null" class="ion-ios-paw"> {{item.battle_winner_reward_pet}}</p>
           <p ng-if="item.battle_winner_reward_bitfunds !== '0'" class="ion-cash"> {{item.battle_winner_reward_bitfunds}}</p>
           <p class="ion-ios-nutrition"> Resource bundle</p>
 
@@ -110,15 +108,15 @@
     </ion-list>
 
     <script id='view_battle.html' type='text/ng-template'>
-      <ion-list>
-        <ion-checkbox ng-checked="true" ng-disabled="true" ng-repeat="attack in view_battle_data.attacks" class="wrapping-list">{{attack.attack_name}}</ion-checkbox>
+        <ion-checkbox ng-checked="true" ng-disabled="true" ng-repeat="attack in view_battle_data.attacks" ng-if="view_battle_data.attacks != null" class="wrapping-list">{{attack.attack_name}}</ion-checkbox>
+        <h3 ng-if="view_battle_data.attacks == null">{{view_battle_data.project_name}} has no attacks signed!</h3>
       <ion-list>
     </script>
 
     <script id='projects_choose.html' type='text/ng-template'>
       <ion-list>
         <ion-radio ng-repeat="item in projects" ng-if="item.stage >= 2 && item.in_battle === '0'" class="wrapping-list" ng-model="choice.value" ng-value="'{{item.id}}'">{{item.name}} - stage {{item.stage}}</ion-radio>
-        <ion-radio disabled ng-repeat="item in projects" ng-if="item.stage < 2" class="wrapping-list" ng-model="choice.value" ng-value="'{{item.id}}'">{{item.name}} - stage {{item.stage}}</ion-radio>
+        <ion-radio ng-disabled="item.stage < 2" ng-repeat="item in projects" ng-if="item.stage < 2" class="wrapping-list" ng-model="choice.value" ng-value="'{{item.id}}'">{{item.name}} - (locked)</ion-radio>
         <ion-list>
     </script>
 

@@ -9,10 +9,6 @@
     </ion-nav-bar>
 
   <ion-content padding="true" class="has-header">
-    <!-- <ion-refresher
-      pulling-text="Update..."
-      on-refresh="fetchProjects()">
-    </ion-refresher> -->
     <ion-card>
 
     <img ng-if="online" style="border-radius: 50%;width: 50%;border: 5px solid #07da71;" class="center" src="{{view_profile.player_avatar}}"/>
@@ -40,50 +36,32 @@
         <i class="icon ion-ios-world-outline"></i>
         Level: {{view_profile.player_level}}
       </a>
-
       <a class="item item-icon-left">
         <i class="icon ion-ios-clock-outline"></i>
         Member since: {{view_profile.player_account_created}}
       </a>
-
-      <a class="item item-icon-left">
-        <i class="icon ion-ios-time-outline"></i>
-        Hours on record: {{view_profile.player_gameplay_record}}
-      </a>
-
-
       <a class="item item-icon-left">
         <i class="icon ion-ios-paw-outline"></i>
         Pets owned: {{view_profile.player_pets_owned}}
       </a>
     </div>
 
-    <!-- <div class="list">
-
+    <div class="list">
       <div class="item item-divider">
-        Trophies
+        Achievements earned by {{view_profile.player_username}}
       </div>
 
-      <div class="item item-avatar item-button-right">
-        <img src="http://piq.codeus.net/static/media/userpics/piq_42321_400x400.png">
-        Bronze Trophy
+      <div ng-repeat="achievement in achievements" ng-if="achievements.length > 0" class="item item-avatar item-button-right">
+        <img src="img/achievements/achievement_25.png">
+        {{achievement.achievement_name}}
         <br>
-        Earned: 2017-04-21
-        <button style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-information-circled"></button>
+        Earned: {{achievement.date}}
+
       </div>
 
-      <div class="item item-divider">
-        Achievements
       </div>
 
-      <div class="item item-avatar item-button-right">
-        <img src="../img/achievements/breeder.png">
-        Breeder
-        <br>
-        Earned: 2017-04-21
-        <button style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-information-circled"></button>
-      </div>
-    </div> -->
+    </div>
 
 
   </ion-card>

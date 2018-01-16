@@ -161,16 +161,35 @@
         </div>
       </div>
       </div>
+
+
+      <div class="row">
+        <div class="col">
+          <div class="list">
+            <div class="item item-divider">
+              Unlocked attacks
+            </div>
+
+            <ion-item class="item-avatar item-icon-right"  ng-repeat="item in project_attacks">
+              <img src="{{item.img_src}}">
+              <h2>{{item.name}}</h2>
+            </ion-item>
+
+            <!-- <img ng-repeat="item in project_attacks" src="{{item.img_src}}" class="feed_icon"> -->
+          </div>
+      </div>
+    </div>
+
       <div ng-if="project_variables.player2 !== ''" class="col">
         <div class="list">
           <div class="item item-divider">
             Shared with:
           </div>
-        <ion-list ng-click="view_player_profile({{project_variables.player_id}})" id="currentProject-list9">
+        <ion-list ng-click="view_player_profile('{{second_player_name}}')" id="currentProject-list9">
           <ion-item class="item-avatar" id="currentProject-list-item7">
             <img src="{{project_variables.player_avatar}}">
-            <h2 ng-if="project_variables.player2 != username">{{project_variables.player2}}</h2>
-            <h2 ng-if="project_variables.player2 == username">{{project_variables.player1}}</h2>
+            <h2 ng-if="project_variables.player2 !== username">{{project_variables.player2}}</h2>
+            <h2 ng-if="project_variables.player2 === username">{{project_variables.player1}}</h2>
             <h2>Level: {{project_variables.player_level}}</h2>
           </ion-item>
         </ion-list>

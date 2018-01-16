@@ -1,5 +1,5 @@
 <!-- standalone project view -->
-<ion-view ng-init="init();" ng-controller="resourcesController" title="{{project_variables.name}}'s resources" id="page2">
+<ion-view ng-init="init();" ng-controller="resourcesController" id="page2">
   <ion-nav-bar class="bar-balanced gradient" align-title="center">
       <ion-nav-back-button class="button-icon ion-ios-arrow-left">
       </ion-nav-back-button>
@@ -18,7 +18,7 @@
           Available attacks & spells
         </div>
         <div ng-repeat="item in project_attacks" ng-if="item.available && !item.owned" style="white-space: initial;" class="item item-avatar item-button-right">
-            <img src="{{item.img_src}}">
+            <img src="img/attacks/{{item.sql_name}}.png">
             <h2>{{item.name}}</h2>
             <p style="white-space: initial;">
               {{item.description}}
@@ -33,19 +33,19 @@
             <br>
             <h3>Stats:</h3>
             <div class="row">
-              <div class="col col-25">
+              <div class="col col-30">
                 <span><p class="progress_label">Damage:  </p></span>
               </div>
-              <div class="col">
+              <div class="col col-75">
                 <progress max="100" id="mini_progress" class="mini_strength" value="{{item.damage}}"> </progress>
               </div>
             </div>
 
             <div class="row">
-              <div class="col col-25">
+              <div class="col col-30">
                 <span><p class="progress_label">Protection:  </p></span>
               </div>
-              <div class="col">
+              <div class="col col-75">
                   <progress max="100" id="mini_progress" class="mini_energy" value="{{item.protection}}"> </progress>
               </div>
             </div>
@@ -60,7 +60,7 @@
         </div>
 
         <div ng-repeat="item in project_attacks" ng-if="item.owned" style="background: #e0e0e0;    white-space: initial;" class="item item-avatar item-button-right">
-          <img src="{{item.img_src}}">
+          <img src="img/attacks/{{item.sql_name}}.png">
             <h2>{{item.name}}</h2>
             <p style="white-space: initial;">
               {{item.description}}

@@ -11,11 +11,10 @@ angular.module('app.features.controllers').controller('shopController', ['$scope
   if (shop_guide === "false" || shop_guide === undefined || shop_guide === null || shop_guide !== "true" || shop_guide === false) {
     // popup with player 2 invite.
     $ionicPopup.show({
-      title: 'Spend your BitFunds to purchase pets and food',
-      subTitle: "You'll gain most of your BitFunds by battling.",
+      title: 'Spend your BitFunds to purchase pets and food, you got 150 BitFunds.',
+      subTitle: "You'll gain most of your BitFunds entering battles against other users, but also by achievements.",
       scope: $rootScope,
       buttons: [
-        { text: 'Cancel' },
         {
           text: 'Got it!',
           type: 'gradient',
@@ -114,79 +113,82 @@ angular.module('app.features.controllers').controller('shopController', ['$scope
             { text: 'Cancel' },
             {
               text: 'Continue',
-              attr: 'data-ng-disabled="pet_name.value === null "',
+              attr: 'data-ng-disabled="pet_name.value === null',
               type: 'gradient',
               onTap: function(e) {
+                if ($scope.pet_name.value === null) {
+                  e.preventDefault();
+                } else {
+                  $rootScope.totalPrice = $rootScope.pet_stage.stage * $scope.price;
 
-                $rootScope.totalPrice = $rootScope.pet_stage.stage * $scope.price;
+                  // popup with player 2 invite.
+                  $ionicPopup.show({
+                    title: 'Invite another player to join your pet',
+                    templateUrl: 'pet_player2_popup.html',
+                    scope: $rootScope,
+                    buttons: [
+                      { text: 'Cancel' },
+                      {
+                        text: 'Continue',
+                        type: 'gradient',
+                        onTap: function(e) {
 
-                // popup with player 2 invite.
-                $ionicPopup.show({
-                  title: 'Invite another player to join your pet',
-                  templateUrl: 'pet_player2_popup.html',
-                  scope: $rootScope,
-                  buttons: [
-                    { text: 'Cancel' },
-                    {
-                      text: 'Continue',
-                      type: 'gradient',
-                      onTap: function(e) {
+                          // confirm purchasehere.
+                          $ionicPopup.show({
+                            title: 'Are you sure to purchase following item for ' + $rootScope.totalPrice + ' BitFunds?',
+                            subTitle: item_string + ' stage ' + $scope.pet_stage.stage + ' shared with ' + $scope.pet_player2.value,
+                            scope: $rootScope,
+                            buttons: [
+                              { text: 'Cancel' },
+                              {
+                                text: 'Confim purchase',
+                                type: 'gradient',
+                                onTap: function(e) {
 
-                        // confirm purchasehere.
-                        $ionicPopup.show({
-                          title: 'Are you sure to purchase following item for ' + $rootScope.totalPrice + ' BitFunds?',
-                          subTitle: item_string + ' stage ' + $scope.pet_stage.stage + ' shared with ' + $scope.pet_player2.value,
-                          scope: $rootScope,
-                          buttons: [
-                            { text: 'Cancel' },
-                            {
-                              text: 'Confim purchase',
-                              type: 'gradient',
-                              onTap: function(e) {
+                                  var obj = {
+                                    token:token,
+                                    username_request: username,
+                                    purchase_item: purchase_item,
 
-                                var obj = {
-                                  token:token,
-                                  username_request: username,
-                                  purchase_item: purchase_item,
+                                    // pet specifics
+                                    purchase_pet: pet,
+                                    pet_name: $scope.pet_name.value,
+                                    player2: $scope.pet_player2.value,
+                                    pet_stage: $scope.pet_stage.stage,
+                                    total_price: $rootScope.totalPrice
+                                   };
 
-                                  // pet specifics
-                                  purchase_pet: pet,
-                                  pet_name: $scope.pet_name.value,
-                                  player2: $scope.pet_player2.value,
-                                  pet_stage: $scope.pet_stage.stage,
-                                  total_price: $rootScope.totalPrice
-                                 };
+                                  console.log(obj);
 
-                                console.log(obj);
+                                  var request = $http({
+                                    method: "post",
+                                    url: https_url + "/shop/shop.php",
+                                    data: obj,
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                                  });
 
-                                var request = $http({
-                                  method: "post",
-                                  url: https_url + "/shop/shop.php",
-                                  data: obj,
-                                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                                });
+                                  $ionicLoading.show({
+                                    template: '<ion-spinner icon="bubbles"></ion-spinner><br/>Purchasing...',
+                                  });
 
-                                $ionicLoading.show({
-                                  template: '<ion-spinner icon="bubbles"></ion-spinner><br/>Purchasing...',
-                                });
-
-                                request.success(function(data) {
-                                  // reload user data to get new bitfunds..
-                                  console.log(data);
-                                  $scope.purchase_completed(data);
-                                });
-                                request.error(function(data){
-                                  $ionicLoading.hide();
-                                  console.log(data);
-                                });
+                                  request.success(function(data) {
+                                    // reload user data to get new bitfunds..
+                                    console.log(data);
+                                    $scope.purchase_completed(data);
+                                  });
+                                  request.error(function(data){
+                                    $ionicLoading.hide();
+                                    console.log(data);
+                                  });
+                                }
                               }
-                            }
-                          ]
-                        });
+                            ]
+                          });
+                        }
                       }
-                    }
-                  ]
-                });
+                    ]
+                  });
+                }
               }
             }
           ]

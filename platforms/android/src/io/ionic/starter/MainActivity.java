@@ -20,6 +20,7 @@
 package io.ionic.starter;
 
 import android.os.Bundle;
+import android.content.SharedPreferences;
 import org.apache.cordova.*;
 
 public class MainActivity extends CordovaActivity
@@ -37,5 +38,14 @@ public class MainActivity extends CordovaActivity
 
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+
+        registerDevice();
     }
+
+    public void registerDevice() {
+        SharedPreferences sharedPreferences = getSharedPreferences("reference", MODE_PRIVATE);
+        System.out.println("********---------    shared pref values...   " +  sharedPreferences.getString("username", "no value"));
+    }
+
+
 }

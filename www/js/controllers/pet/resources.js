@@ -7,10 +7,9 @@ angular.module('app.features.controllers').controller('resourcesController', ['$
     // popup with player 2 invite.
     $ionicPopup.show({
       title: 'This is your pets resources',
-      subTitle: "By investing in your pet and regularly feeding it and signing it up for battles, you add resources from your inventory.",
+      subTitle: "By investing in your pet and regularly feeding it and signing it up for battles, you add resources from your own inventory.",
       scope: $rootScope,
       buttons: [
-        { text: 'Cancel' },
         {
           text: 'Got it!',
           type: 'gradient',
@@ -68,24 +67,21 @@ angular.module('app.features.controllers').controller('resourcesController', ['$
         }
       ]
     });
-  }
+  };
 
   $scope.switch_view = function(string) {
-
     switch (string) {
       case 'attacks':
           $scope.title = 'Attacks';
           $rootScope.get_attacks_by_id($rootScope.app.open_project.id);
           $scope.attacks = true;
           $scope.resources = false;
-
         break;
 
       case 'resources':
           $scope.title = 'Resources';
           $scope.attacks = false;
           $scope.resources = true;
-
         break;
       default:
     }
@@ -183,8 +179,8 @@ angular.module('app.features.controllers').controller('resourcesController', ['$
 
       // treats
       case 5.1:
-      foodtype_amount_available = $scope.available_user_resources.player_treattype_dogbone;
-        break;
+        foodtype_amount_available = $scope.available_user_resources.player_treattype_dogbone;
+      break;
     }
 
     $rootScope.input = {
@@ -193,7 +189,6 @@ angular.module('app.features.controllers').controller('resourcesController', ['$
 
     if (foodtype_amount_available >= 1) {
       // do request
-      console.log($rootScope.project_variables[foodtype_string]);
 
       username_request = localStorage.getItem("Username");
 
@@ -217,26 +212,18 @@ angular.module('app.features.controllers').controller('resourcesController', ['$
           console.log($rootScope.project_variables[foodtype_string]);
           $rootScope.fetchUserData();
           $rootScope.reloadProject();
-          $state.reload();
         } else {
-
           $rootScope.popup_notice("Error", "Error log: " + response.error_log);
         }
 
       });
-
-
     } else {
       $ionicLoading.show({
         template: 'You have 0 '+ foodstring  ,
         duration: 1500
       });
     }
-
     $rootScope.max = Number(foodtype_amount_available);
-
-
-
   };
 
 }]);

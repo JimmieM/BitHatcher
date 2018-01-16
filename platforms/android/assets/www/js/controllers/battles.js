@@ -138,12 +138,18 @@ angular.module('app.features.controllers').controller('battlesController', ['$sc
 
   $scope.view_battle = function(project_name, stage, attacks) {
 
-    attacks = JSON.parse(attacks);
     $rootScope.view_battle_data = {
       project_name: project_name,
       stage: stage,
-      attacks: attacks
     };
+
+    console.log(attacks.length);
+    if (attacks.length > 0) {
+      attacks = JSON.parse(attacks);
+      $rootScope.view_battle_data['attacks'] = attacks;
+    } else {
+      $rootScope.view_battle_data['attacks'] = null;
+    }
 
     console.log($rootScope.view_battle_data);
 
@@ -410,15 +416,12 @@ angular.module('app.features.controllers').controller('battlesController', ['$sc
   // };
 
   $scope.http_battle = function() {
-
-    console.log($rootScope.chosen_attacks);
-
     var obj = {
       token: token,
       battle_id: $rootScope.battle_params.battle_id, // the id of the battle.
       project_id: $rootScope.battle_params.project_id, // id of project signing up
       username_signing: $rootScope.username,
-      id_signing: $rootScope.user_id,
+      id_signing: id,
       winner_reward_pet: $rootScope.battle_params.pet_reward,
       winner_reward_bitfunds: $rootScope.battle_params.bitfunds_reward,
       pvp_pve: $rootScope.battle_params.pvp_pve,
@@ -456,7 +459,7 @@ angular.module('app.features.controllers').controller('battlesController', ['$sc
               title : 'signed up for battle against ' + $rootScope.battle_params.project_opponent_name,
               subTitle: 'Your pet is now in battle. Check back later to view the winner',
               buttons: [{
-               text: 'Close',
+               text: 'Okay!',
                type: 'gradient',
                onTap: function (e) {
                  $scope.fetchBattles();

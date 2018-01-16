@@ -10,10 +10,9 @@ angular.module('app.features.controllers').controller('projectController', ['$sc
     // popup with player 2 invite.
     $ionicPopup.show({
       title: "This is your first pet.",
-      subTitle: "Start by adding feeding bottles in the resource tab. Your pet can only eat specific kinds of food until later stages. ",
+      subTitle: "Start by adding feeding bottles in the top right resource tab. What your pet can eat depends on its stage and type of creature.",
       scope: $rootScope,
       buttons: [
-        { text: 'Cancel' },
         {
           text: 'Got it!',
           type: 'gradient',
@@ -32,8 +31,20 @@ angular.module('app.features.controllers').controller('projectController', ['$sc
    });
   };
 
+
   // app global array used to push project contents into from ListController -> ViewProject(), and recieve in projectController..
   $rootScope.project_variables = $rootScope.app.open_project;
+
+  console.log();
+  $rootScope.project_attacks = null;
+
+  $rootScope.get_attacks_by_id($rootScope.project_variables.id);
+
+  if ($rootScope.project_variables.player2 !== username) {
+    $scope.second_player_name = $rootScope.project_variables.player2;
+  } else {
+    $scope.second_player_name = $rootScope.project_variables.player1;
+  }
 
   $rootScope.project_variables.foodtype_bird_seed = Number($rootScope.project_variables.foodtype_bird_seed);
   $rootScope.project_variables.foodtype_cooked_steak = Number($rootScope.project_variables.foodtype_cooked_steak);
@@ -109,10 +120,9 @@ angular.module('app.features.controllers').controller('projectController', ['$sc
 
   var player_id = localStorage.getItem("Id");
 
-
 $scope.feed = function(project_id,foodtype, foodtype_string) {
 
-  obj = {
+  var obj = {
     token: token,
     username_request: username_request,
     player_id: player_id,
@@ -167,8 +177,6 @@ $scope.feed = function(project_id,foodtype, foodtype_string) {
 
        console.log(response['achievement']);
        $rootScope.earnedAchievement(response['achievement']);
-
-
       }
 
       if (response.success === 0) {

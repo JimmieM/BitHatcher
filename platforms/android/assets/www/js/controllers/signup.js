@@ -29,10 +29,15 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
     $scope.gender_img = 'img/avatar/' + $scope.gender_img + '.png';
   };
 
+  $scope.goToTerms = function() {
+    $state.go('terms');
+  }
+
   $scope.validateEmail = function(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   };
+
 
   $scope.signup = function(email, username, password) {
 
@@ -41,7 +46,7 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
     console.log(username, password, email);
     x = 1;
     if((username === undefined) || (password === undefined) || (email === undefined) || ($scope.gender === 0)) {
-      $rootScope.popup_notice('Please fill all fields!');
+      $rootScope.popup_notice('One or several fields are empty.');
     } else {
 
       var email_check = false;
@@ -57,8 +62,11 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
 
       if (username.length < 3) {
         $rootScope.popup_notice('Your username has to be atleast 3 characters.');
-      }  else {
+      } else if(username.length > 15) {
+        $rootScope.popup_notice('Your username can not be longer than 15 characters.');
+      } else {
         username_check = true;
+        username = username.split(" ").join("");
       }
 
       if (password.length < 6) {
@@ -76,6 +84,8 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
             platform: $scope.platform,
             gender: $scope.signup_gender.index
          };
+1
+         console.log(obj);
 
           var request = $http({
             method: "post",
@@ -96,13 +106,9 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
 
             switch (cred) {
               case 1:
-                console.log("logged in");
-
                 var username = data[0].player_username;
                 // localStorage stuff
                 localStorage.setItem("Username", username);
-
-                console.log("Signign as: " + username);
 
                 var loggedin = true;
                 localStorage.setItem("LoggedIn", JSON.stringify(loggedin));
@@ -122,24 +128,27 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
                 console.log("Avatar signing in: " + avatar);
                 window.localStorage.setItem("Avatar", avatar);
 
-                swal({
-                  title: "Awesome!",
-                  text: "Welcome, " + username,
-                  timer: 1000,
+                $ionicPopup.show({
+                  title: "Welcome, " + username,
+                  scope: $rootScope,
+                  buttons: [
+                    {
+                      text: 'Continue',
+                      type: 'gradient',
+                      onTap: function(e) {
+                        $state.reload();
+                        $state.go('tabsController.projects'); // redirect
+                      }
+                    }
+                  ]
                 });
 
-                setTimeout(function () {
-
-                  $state.reload();
-                  $state.go('tabsController.projects'); // redirect
-                }, 1500);
                 break;
               case 0:
                   if (data[0].re_log == 1) {
                     $rootScope.popup_notice("A problem occured, please sign in with your new credentials",'','', $state.go('login'));
                   }
                   if(data[0].user_exist == 1) {
-
                     $rootScope.popup_notice("That username already exist.");
                     $scope.disabled = false;
                   }
@@ -148,10 +157,9 @@ function($scope, $http, $state, $rootScope, $ionicPopup, $ionicLoading) {
 
             }
         });
-        request.error(function(data)
-        {
+        request.error(function(data) {
           $ionicLoading.hide();
-          $rootScope.popup_notice("There was an error..");
+          $rootScope.popup_notice("There was an error.. " + data);
         });
       }
     }

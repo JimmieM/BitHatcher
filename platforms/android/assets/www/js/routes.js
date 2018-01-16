@@ -211,6 +211,18 @@ angular.module('app.routes', [])
     controller: 'signupCtrl'
   })
 
+  .state('terms', {
+    url: '/terms',
+    templateUrl: 'templates/terms.html',
+    controller: 'termsCtrl'
+  })
+
+  .state('recover', {
+    url: '/recover',
+    templateUrl: 'templates/recover.html',
+    controller: 'recoverCtrl'
+  })
+
   .state('tabsController.newProject', {
     url: '/page7',
     views: {

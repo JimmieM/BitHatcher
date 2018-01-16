@@ -12,15 +12,12 @@ angular.module('app.features.controllers').controller('myProfileController', ['$
 angular.module('app.features.controllers').controller('listController', ['$scope','$http', '$state' , '$stateParams','$ionicPlatform' , '$rootScope' , '$ionicLoading' , '$ionicPopup',
   function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionicLoading, $ionicPopup) {
       $state.reload();
-      username = localStorage.getItem("Username");
-      $scope.username = localStorage.getItem("Username");
-
-      if (username !== null) {
-
-        setInterval(function() {
-          $rootScope.fetchProjects(false);
-        }, 30000);
-      }
+      // if (username !== null) {
+      //
+      //   // setInterval(function() {
+      //   //   $rootScope.fetchProjects(false);
+      //   // }, 30000);
+      // }
 
 
       // func to fetch projects..
@@ -36,7 +33,7 @@ angular.module('app.features.controllers').controller('listController', ['$scope
         }
 
         var obj = {
-           username: username,
+           username: $rootScope.username,
            token: token
          };
 

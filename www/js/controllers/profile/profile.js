@@ -5,17 +5,28 @@ function($scope, $rootScope, $http, $state, $stateParams, $ionicPlatform, $ionic
     $state.go('tabsController.users');
   };
 
-  $scope.view_profile = view_profile;
+  $scope.view_profile = $rootScope.view_profile;
 
-  view_profile.player_avatar = $scope.build_avatar(view_profile.player_avatar);
+  $rootScope.view_profile.player_avatar = $scope.build_avatar($rootScope.view_profile.player_avatar);
 
   $scope.is_friend = $scope.view_profile.player_is_a_friend;
 
   $scope.online = false;
 
+
   if ($scope.view_profile.player_is_online == true) {
     $scope.online = true;
   }
+
+  $scope.render_achievements = function(achievements) {
+    if (achievements.success === 1) {
+      if (achievements.empty === 0) {
+        $scope.achievements = JSON.parse(achievements.achievements);
+      }
+    }
+  };
+
+  $scope.render_achievements($scope.view_profile.achievements);
 
   $scope.add_friend = function(username_add) {
     if (!$scope.is_friend) {

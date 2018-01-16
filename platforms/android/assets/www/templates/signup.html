@@ -26,8 +26,14 @@
           <select ng-model="signup_gender.index" ng-change="gender_changed_select(signup_gender.index);" ng-options="genders.indexOf(gender) as gender for gender in genders">
           </select>
         </label>
+        <button class="button button-small button-block" style="color:green" type="button" ng-click="goToTerms()" name="button">Terms of Service</button>
+        <ion-checkbox style="white-space: inherit;" ng-model="attack.checked">I've read and agree to Terms of Service</ion-checkbox>
+
+
+
       </ion-list>
-        <ion-list id="profile-preview">
+
+        <!-- <ion-list id="profile-preview">
           <ion-item style="padding-left: 90px;" src="#" class="item-avatar" id="profile-list-item2">
             <img style="max-width:60px; max-height:60px;" src='{{gender_img}}'/>
             <h3>This is you</h3>
@@ -36,8 +42,11 @@
             <p id="email">{{email}}</p>
             <br>
           </ion-item>
-        </ion-list>
+        </ion-list> -->
       <button ng-disabled="disabled" ng-click="signup(email, username, password)" id="signup-button4" class="button button-balanced gradient  button-block">Sign up</button>
+
     </form>
+
+
   </ion-content>
 </ion-view>

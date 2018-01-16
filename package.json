@@ -10,6 +10,7 @@
     "cordova-plugin-app-preferences": "^0.99.3",
     "cordova-plugin-app-version": "git+https://github.com/whiteoctober/cordova-plugin-app-version.git",
     "cordova-plugin-background-mode": "^0.7.2",
+    "cordova-plugin-nativestorage": "^2.2.2",
     "cordova-plugin-vibration": "^2.1.5",
     "cordova-plugin-whitelist": "git+https://github.com/apache/cordova-plugin-whitelist.git",
     "cordova-plugin-x-socialsharing": "git+https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
@@ -59,7 +60,8 @@
       "cordova-plugin-vibration": {},
       "cordova-plugin-app-version": {},
       "cordova-plugin-background-mode": {},
-      "cordova-plugin-app-preferences": {}
+      "cordova-plugin-app-preferences": {},
+      "cordova-plugin-nativestorage": {}
     },
     "platforms": []
   }

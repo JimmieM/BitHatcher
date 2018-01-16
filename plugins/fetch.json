@@ -2,7 +2,7 @@
   "cordova-plugin-whitelist": {
     "source": {
       "type": "registry",
-      "id": "https://github.com/apache/cordova-plugin-whitelist.git"
+      "id": "git+https://github.com/apache/cordova-plugin-whitelist.git"
     },
     "is_top_level": true,
     "variables": {}
@@ -125,7 +125,7 @@
   "cordova-plugin-app-preferences": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-app-preferences"
+      "id": "cordova-plugin-app-preferences@^0.99.3"
     },
     "is_top_level": true,
     "variables": {}
@@ -134,6 +134,14 @@
     "source": {
       "type": "registry",
       "id": "cordova-plugin-ionic-webview@^1.1.11"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-nativestorage": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-nativestorage"
     },
     "is_top_level": true,
     "variables": {}

@@ -5,19 +5,20 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
   $scope.init = function() {
     $scope.no_content = true;
     $scope.localChat_token = null;
+    $scope.localChat = [];
 
     $scope.loadMessages();
 
-    setTimeout(function() {
-      if ($scope.localChat.length > 0) {
-        $ionicScrollDelegate.scrollBottom();
-      }
-    }, 500);
+    // setTimeout(function() {
+    //   if ($scope.localChat.length > 0) {
+    //     $ionicScrollDelegate.scrollBottom();
+    //   }
+    // }, 500);
 
 
   };
 
-  $scope.localChatting_with = $rootScope.chat.player2;
+  $scope.chatting_with = $rootScope.chat.player2;
 
   // grab pointer to original function
   var oldSoftBack = $rootScope.$ionicGoBack;
@@ -29,16 +30,19 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
     $ionicScrollDelegate.scrollTop();
   };
 
-  $scope.loadMessages = function() {
+  $scope.fetchMessages = function(amount = 20) {
+    console.log(amount);
+    console.log($scope.localChat);
     var obj = {
       token: token,
-      username: $rootScope.username,
+      username_request: $rootScope.username,
       player2: $rootScope.chat.player2,
-      chat_token: $scope.localChat_token
+      chat_token: $scope.localChat_token,
+      amount: amount
      };
+     console.log(obj);
 
     var request = $http({
-      token: token,
       method: "post",
       url: https_url + "/chat/load_chat.php",
       data: obj,
@@ -46,9 +50,11 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
     });
 
     request.success(function(data) {
+      console.log(data);
 
       if (data === null) {
         $rootScope.chat.player2 = '';
+
       }
       if (data !== null || data.length > 0) {
 
@@ -61,7 +67,14 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
             $scope.localChat_token = data.current_token;
 
             $scope.localChat = data.chats;
-            $ionicScrollDelegate.scrollBottom();
+
+            // if the param amount is less than 20, then its probably not a "load more", but the first load of the view
+            // then, scroll to bottom - else, let the user read the loaded messages.
+            if (amount <= 20) {
+                $ionicScrollDelegate.scrollBottom();
+            }
+
+
           } else {
             $scope.localChat;
           }
@@ -79,9 +92,31 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
       $rootScope.popup_notice('There was an error', data);
 
     });
-    console.log($rootchat);
+    request.finally(function() {
+      $rootScope.$broadcast('scroll.refreshComplete'); // release refresh
+    });
+
+    // if ($rootScope.chat.player2 !== '') {
+    //   setTimeout($scope.loadMessages, 3000);
+    // }
+
+  };
+
+  var clicked = 1;
+  $scope.loadMore = function() {
+    console.log(clicked);
+    $scope.fetchMessages((clicked++) * 20);
+  }
+
+  $scope.loadMessages = function() {
     if ($rootScope.chat.player2 !== '') {
-      setTimeout($scope.loadMessages, 3000);
+
+    $scope.fetchMessages();
+
+    var channel = realtime.channels.get($rootScope.username);
+    channel.subscribe(function(message) {
+      $scope.fetchMessages();
+    });
     }
   };
 
@@ -112,6 +147,8 @@ function($ionicScrollDelegate, $scope, $rootScope, $http, $state, $stateParams, 
     $scope.chat_message_backup = $scope.localChat_message;
     $scope.chat_message = ''; // clear input field.
     $scope.no_content = true;
+
+    console.log($scope.localChat);
 
 
     request.success(function(data) {

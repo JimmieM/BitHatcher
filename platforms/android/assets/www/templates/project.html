@@ -166,11 +166,11 @@
           <div class="item item-divider">
             Shared with:
           </div>
-        <ion-list ng-click="view_player_profile({{project_variables.player_id}})" id="currentProject-list9">
+        <ion-list ng-click="view_player_profile('{{second_player_name}}')" id="currentProject-list9">
           <ion-item class="item-avatar" id="currentProject-list-item7">
             <img src="{{project_variables.player_avatar}}">
-            <h2 ng-if="project_variables.player2 != username">{{project_variables.player2}}</h2>
-            <h2 ng-if="project_variables.player2 == username">{{project_variables.player1}}</h2>
+            <h2 ng-if="project_variables.player2 !== username">{{project_variables.player2}}</h2>
+            <h2 ng-if="project_variables.player2 === username">{{project_variables.player1}}</h2>
             <h2>Level: {{project_variables.player_level}}</h2>
           </ion-item>
         </ion-list>

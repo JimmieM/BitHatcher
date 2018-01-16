@@ -20,8 +20,11 @@
         </label>
       </ion-list>
       <div class="spacer" style="height: 40px;"></div>
-      <button ng-click="login(username,password)" id="login-button" class="button button-block gradient">Log in</button>
-      <a style="color:black;" ng-click="gotoSignup()" id="login-button3" class="button button-block button-clear">Or create an account</a>
+      <button ng-disabled="username.length < 1 && password.length < 1" ng-click="login(username,password)" id="login-button" class="button button-block gradient">Log in</button>
+
+      <!-- <a style="color:black;" ng-click="goTo('recover')" id="login-button3" class="button button-block button-clear">I've lost my password</a> -->
+      <!-- <br> -->
+      <a style="color:black;" ng-click="goTo('signup')" id="login-button3" class="button button-block button-clear">Create an account</a>
     </form>
   </ion-content>
 </ion-view>

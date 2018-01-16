@@ -54,7 +54,7 @@ function getAss() {
 
 }
 
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services', 'ngCordova','ionic.cloud', 'app.features.controllers'])
+angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes', 'app.directives','app.services', 'ngCordova','ionic.cloud', 'app.features.controllers'])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider, $ionicCloudProvider) {
   $ionicCloudProvider.init({
@@ -81,9 +81,15 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
 
 
-.run(function($ionicPlatform, $state, $rootScope, $http, $ionicLoading, $ionicPopup, $cordovaVibration, $cordovaLocalNotification) {
+.run(function($ionicPlatform, $state, $rootScope, $http, $ionicLoading, $ionicPopup, $cordovaVibration, $cordovaLocalNotification, $ionicPush) {
   $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+  console.log("Boi");
 
+  // $ionicPush.register().then(function (token) {
+  //    // do something with your 'token' and also save the token with $ionicPush
+  //    console.log('The Stupid Token; ' + token);
+  //
+  //  });
 
   $rootScope.user_id = localStorage.getItem("Id");
 
@@ -103,12 +109,20 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     function ok (value) {console.log(value + " success save");}
     function fail (error) {console.log(error + "error save");}
 
+    let setData = {
+      username: 'Jomme'
+    };
 
+    NativeStorage.setItem("reference", setData, setSuccess, setError);
+     function setSuccess(obj){
+       console.log("Success 123");
+     }
+     function setError(obj){
+       console.log("Fail 123");
+     }
+
+    // For IOS
     var prefs = plugins.appPreferences;
-
-    // cordova interface
-
-    // store key => value pair
 
     prefs.fetch ('username_loggedin').then (ok, fail);
 
@@ -374,6 +388,10 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     localStorage.setItem('Error_logs', errors + data_append);
   };
 
+  $rootScope.goTo = function(state) {
+    $state.go(state);
+  }
+
   $rootScope.goToSettings = function(){
     $state.go('tabsController.settings'); // redirect
   };
@@ -625,27 +643,22 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
   // global function to view someones profile,
   $rootScope.view_player_profile = function(player2_username) {
-
-    var username = localStorage.getItem("Username");
-
     if (player2_username === undefined || player2_username === null || player2_username === '') {
-      player2_username = username;
+      player2_username = $rootScope.username;
     }
-
     var obj = {
         token: token,
-        username_request: username,
+        username_request: $rootScope.username,
         username_get: player2_username,
      };
 
      console.log(obj);
 
     var request = $http({
-
-        method: "post",
-        url: https_url + "/users/view_profile.php",
-        data: obj,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      method: "post",
+      url: https_url + "/users/view_profile.php",
+      data: obj,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
     request.success(function(data) {
@@ -655,9 +668,9 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
       // user fetch
       if (data.success === 1) {
-        view_profile = data[0];
+        $rootScope.view_profile = data[0];
 
-        console.log("Opening profile of: " + view_profile.player_username);
+        console.log("Opening profile of: " + $rootScope.view_profile.player_username);
 
         $state.go('tabsController.profile');
       } else {
