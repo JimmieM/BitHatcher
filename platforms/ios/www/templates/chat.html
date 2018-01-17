@@ -1,0 +1,53 @@
+<ion-view ng-controller="chatController" ng-init="init()" title="{{chat.player2}}" id="page4">
+
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+        <ion-nav-back-button class="button-icon ion-ios-arrow-left">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="right">
+          <button ng-click="view_player_profile('{{chatting_with}}')" style="width: 100%;border-radius:0px;min-height:0px;background-color: transparent;border: none;color: white;" class="button icon-left ion-person"></button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+  <ion-content padding="true" class="has-header">
+
+    <ion-refresher ng-if="localChat.length > 0"
+      pulling-text="Load more..."
+      on-refresh="loadMore()">
+    </ion-refresher>
+
+    <div class="list">
+
+    <ion-list style="margin-bottom: 15%;" class="row">
+
+    <h3 ng-if="localChat.length === 0">Send a 🖐 to {{chatting_with}}</h3>
+
+
+    <ion-item ng-repeat="x in localChat | orderBy: 'date'" class="item-avatar item-icon-right" id="profile-list-item6">
+      <img src="{{x.player_avatar}}">
+      <h2 ng-if="x.from_username === username">YOU</h2>
+      <h2 ng-if="x.from_username !== username">{{x.from_username}}</h2>
+      <p style="white-space: normal;">{{x.message}}</p>
+
+      <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+
+      <ion-option-button class="gradient">{{x.date}}</ion-option-button>
+    </ion-item>
+  </ion-list>
+</div>
+
+  </ion-content>
+
+  <div style="position: absolute; bottom: 45px; width: 100%;margin-bottom:0px;" class="item item-input-inset">
+   <label class="item-input-wrapper">
+     <input ng-change="type()" type="text" ng-model="chat_message" placeholder="Type a message..">
+   </label>
+   <i style="font-size: 30px;
+    padding: 5px;
+    color: #00e0b2;" ng-if="!no_content" ng-click="sendMessage()" class="icon ion-ios-paperplane">
+   </i>
+
+   <i style="font-size: 30px;padding: 5px;color: #28a54c;" ng-if="no_content" class="icon ion-ios-paperplane">
+   </i>
+ </div>
+
+</ion-view>

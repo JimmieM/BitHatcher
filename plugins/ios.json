@@ -1,0 +1,43 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "cordova-plugin-x-socialsharing": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "ionic-plugin-keyboard": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "phonegap-plugin-push": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "cordova-plugin-background-mode": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    }
+  },
+  "dependent_plugins": {
+    "es6-promise-plugin": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.bithatcher.bithatcher"
+    }
+  }
+}

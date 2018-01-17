@@ -26,7 +26,7 @@
   "cordova-plugin-device": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-device"
+      "id": "cordova-plugin-device@1.1.4"
     },
     "is_top_level": true,
     "variables": {}
@@ -69,7 +69,7 @@
   "de.appplant.cordova.plugin.local-notification": {
     "source": {
       "type": "registry",
-      "id": "https://github.com/katzer/cordova-plugin-local-notifications#ios10"
+      "id": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#ios10"
     },
     "is_top_level": true,
     "variables": {}
@@ -109,7 +109,7 @@
   "cordova-plugin-app-version": {
     "source": {
       "type": "registry",
-      "id": "https://github.com/whiteoctober/cordova-plugin-app-version.git"
+      "id": "git+https://github.com/whiteoctober/cordova-plugin-app-version.git"
     },
     "is_top_level": true,
     "variables": {}
@@ -117,7 +117,7 @@
   "cordova-plugin-background-mode": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-background-mode"
+      "id": "cordova-plugin-background-mode@^0.7.2"
     },
     "is_top_level": true,
     "variables": {}

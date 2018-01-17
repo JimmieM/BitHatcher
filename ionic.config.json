@@ -1,18 +1,28 @@
-{
-  "name": "BitHatcher",
-  "app_id": "c4c31bb9",
-  "type": "ionic1",
-  "watchPatterns": [
-    "scss/**/*",
-    "www/**/*",
-    "!www/lib/**/*",
-    "!www/**/*.map"
-  ],
-  "integrations": {
-    "gulp": {},
-    "cordova": {}
-  },
-  "gulp": {
-    "enabled": false
+[
+  {
+      "type":"group",
+      "title":"Common",
+      "items":[{
+    "title":"Title",
+    "type":"textfield",
+    "key":"title"
+  }, {
+    "title":"Language",
+    "type":"radio",
+    "key":"lang",
+    "default": "en-us",
+    "items":[{
+      "value":"en-us",
+      "title":"English (US)"
+    }, {
+      "value":"en-gb",
+      "title":"English (UK)"
+    }]
+  }, {
+    "title":"Debug",
+    "type":"toggle",
+    "default":false,
+    "key":"debug"
+  }]
   }
-}
+]

@@ -1,41 +1,19 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "cordova-plugin-app-preferences",
-        "scope": null,
-        "escapedName": "cordova-plugin-app-preferences",
-        "name": "cordova-plugin-app-preferences",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "/Users/fsociety/Dropbox/Appar/Hatcher../BitHatcher/node_modules"
-    ]
-  ],
-  "_from": "cordova-plugin-app-preferences@latest",
+  "_from": "cordova-plugin-app-preferences@^0.99.3",
   "_id": "cordova-plugin-app-preferences@0.99.3",
-  "_inCache": true,
+  "_inBundle": false,
+  "_integrity": "sha1-IfY+y0aYuXvbgS5sFpK6XzLci9A=",
   "_location": "/cordova-plugin-app-preferences",
-  "_nodeVersion": "0.10.40",
-  "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/cordova-plugin-app-preferences-0.99.3.tgz_1475801593166_0.23312430921941996"
-  },
-  "_npmUser": {
-    "name": "apla",
-    "email": "dot.and.thing@gmail.com"
-  },
-  "_npmVersion": "3.10.7",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "cordova-plugin-app-preferences",
-    "scope": null,
-    "escapedName": "cordova-plugin-app-preferences",
+    "type": "range",
+    "registry": true,
+    "raw": "cordova-plugin-app-preferences@^0.99.3",
     "name": "cordova-plugin-app-preferences",
-    "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
+    "escapedName": "cordova-plugin-app-preferences",
+    "rawSpec": "^0.99.3",
+    "saveSpec": null,
+    "fetchSpec": "^0.99.3"
   },
   "_requiredBy": [
     "#USER",
@@ -43,9 +21,8 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-app-preferences/-/cordova-plugin-app-preferences-0.99.3.tgz",
   "_shasum": "21f63ecb4698b97bdb812e6c1692ba5f32dc8bd0",
-  "_shrinkwrap": null,
-  "_spec": "cordova-plugin-app-preferences",
-  "_where": "/Users/fsociety/Dropbox/Appar/Hatcher../BitHatcher/node_modules",
+  "_spec": "cordova-plugin-app-preferences@^0.99.3",
+  "_where": "/Users/fsociety/Dropbox/Appar/Hatcher../BitHatcher_old",
   "author": {
     "name": "Ivan Baktsheev"
   },
@@ -55,6 +32,7 @@
   "bugs": {
     "url": "https://github.com/apla/me.apla.cordova.app-preferences/issues"
   },
+  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-app-preferences",
     "platforms": [
@@ -68,7 +46,7 @@
       "blackberry10"
     ]
   },
-  "dependencies": {},
+  "deprecated": false,
   "description": "Application preferences plugin and preference pane generator",
   "devDependencies": {
     "cordova": ">=5.4.1",
@@ -79,12 +57,6 @@
     "q": "^1.4.1",
     "serve-me": "^0.8.2"
   },
-  "directories": {},
-  "dist": {
-    "shasum": "21f63ecb4698b97bdb812e6c1692ba5f32dc8bd0",
-    "tarball": "https://registry.npmjs.org/cordova-plugin-app-preferences/-/cordova-plugin-app-preferences-0.99.3.tgz"
-  },
-  "gitHead": "ac4eae6c07479e3a82c1b63338143fdad527e8e2",
   "homepage": "https://github.com/apla/me.apla.cordova.app-preferences",
   "keywords": [
     "preferences",
@@ -100,19 +72,10 @@
     "cordova-blackberry10"
   ],
   "license": "Apache-2.0",
-  "maintainers": [
-    {
-      "name": "apla",
-      "email": "dot.and.thing@gmail.com"
-    }
-  ],
   "name": "cordova-plugin-app-preferences",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/apla/me.apla.cordova.app-preferences.git"
   },
-  "scripts": {},
   "version": "0.99.3"
 }

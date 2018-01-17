@@ -1,0 +1,68 @@
+<ion-view ng-controller="profileController" title="{{view_profile.player_username}}" id="page4">
+
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+        <ion-nav-back-button class="button-icon ion-ios-arrow-left">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="right">
+          <!--<button ng-controller="projectsController" ng-click="goToSettings()" style="color: white;border: 1px solid white;border-radius: 0;" class="button button-outline icon-right ion-navicon">Settings</button>-->
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+  <ion-content padding="true" class="has-header">
+    <ion-card>
+
+    <img ng-if="online" style="border-radius: 50%;width: 50%;border: 5px solid #07da71;" class="center" src="{{view_profile.player_avatar}}"/>
+    <img ng-if="!online" style="border-radius: 50%;width: 50%;border: 5px solid #ef473a;" class="center" src="{{view_profile.player_avatar}}"/>
+
+    <ion-card-content>
+      <ion-card-title>
+        <h2 class="center">{{view_profile.player_username}}</h2>
+      </ion-card-title>
+      <h4>
+        <br>
+
+      </h4>
+    </ion-card-content>
+
+    <div ng-if="username !== view_profile.player_username"  class="button-bar">
+      <a ng-if="!is_friend" class="button gradient" ng-click="add_friend('{{view_profile.player_username}}')">Add as friend</a>
+      <a ng-if="is_friend" class="button assertive" ng-click="unfriend('{{view_profile.player_username}}')">Unfriend {{view_profile.player_username}}</a>
+      <a class="button button-assertive">Block user</a>
+    </div>
+
+    <div class="list card">
+
+      <a class="item item-icon-left">
+        <i class="icon ion-ios-world-outline"></i>
+        Level: {{view_profile.player_level}}
+      </a>
+      <a class="item item-icon-left">
+        <i class="icon ion-ios-clock-outline"></i>
+        Member since: {{view_profile.player_account_created}}
+      </a>
+      <a class="item item-icon-left">
+        <i class="icon ion-ios-paw-outline"></i>
+        Pets owned: {{view_profile.player_pets_owned}}
+      </a>
+    </div>
+
+    <div class="list">
+      <div class="item item-divider">
+        Achievements earned by {{view_profile.player_username}}
+      </div>
+
+      <div ng-repeat="achievement in achievements" ng-if="achievements.length > 0" class="item item-avatar item-button-right">
+        <img src="img/achievements/achievement_25.png">
+        {{achievement.achievement_name}}
+        <br>
+        Earned: {{achievement.date}}
+
+      </div>
+
+      </div>
+
+    </div>
+
+
+  </ion-card>
+</ion-view>

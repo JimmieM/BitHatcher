@@ -4,12 +4,9 @@ Private repo for BitHatcher.
 
 ### What is this repository for? ###
 
-* Version 0.1
-* Angular 2 with Ionic Framework
+* AngularJS with Ionic Framework
 
 BitHatcher is an upcoming hybrid application, developed to be released for Android and iOS.
-
-The API is separated due easier version control. [Link](https://bitbucket.org/JimmieMagnussonConsulting/bithatcher-api)
 
 ### Frequently updated with news regarding API and client side ###
 
@@ -17,7 +14,7 @@ The API is separated due easier version control. [Link](https://bitbucket.org/Ji
 
 In the last update I introduced a new feature. The battle-system. As with the completion of the coding for the feature I still felt that something was missing. Which was where I noticed a small failure in the idea. Let us assume that BitHatcher has only a few players, while the game is basically all about battling to gain resources to actually keep your pets alive. In this theory, there's only a small amount of player. Which is certainly an issue.
 
-I played with the idea to implement a PvE option, which is in theory just a way for your pets to battle against a bot, or in this case a script. While building this idea to a product, which I'm doing right, I thought of the reality of this idea. It certainly seems okay. You can fight against a bot, and if you win you'll earn resources such as BitFunds, pets and food, but if you loose you might loose the pet. 
+I played with the idea to implement a PvE option, which is in theory just a way for your pets to battle against a bot, or in this case a script. While building this idea to a product, which I'm doing right, I thought of the reality of this idea. It certainly seems okay. You can fight against a bot, and if you win you'll earn resources such as BitFunds, pets and food, but if you loose you might loose the pet.
 
 This theory gives BitHatcher a chance to live without depending on having a lot of active users. Since the game is multiplayer by now.
 

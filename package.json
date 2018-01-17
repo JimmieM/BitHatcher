@@ -6,11 +6,13 @@
     "@ionic/cloud": "^0.16.0",
     "cordova-android": "^7.0.0",
     "cordova-ios": "^4.5.4",
-    "cordova-plugin-app-event": "file:node_modules/cordova-plugin-app-event",
     "cordova-plugin-app-preferences": "^0.99.3",
     "cordova-plugin-app-version": "git+https://github.com/whiteoctober/cordova-plugin-app-version.git",
     "cordova-plugin-background-mode": "^0.7.2",
-    "cordova-plugin-nativestorage": "^2.2.2",
+    "cordova-plugin-device": "^1.1.4",
+    "cordova-plugin-ionic-webview": "^1.1.16",
+    "cordova-plugin-local-notifications": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#ios10",
+    "cordova-plugin-splashscreen": "~4.0.1",
     "cordova-plugin-vibration": "^2.1.5",
     "cordova-plugin-whitelist": "git+https://github.com/apache/cordova-plugin-whitelist.git",
     "cordova-plugin-x-socialsharing": "git+https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
@@ -21,6 +23,7 @@
     "gulp-minify-css": "^0.3.0",
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^2.0.4",
+    "ionic-plugin-keyboard": "~2.2.1",
     "ng-walkthrough": "^1.0.4",
     "npm-4": "^2.1.1",
     "phonegap-plugin-push": "~2.0.0-rc3"
@@ -61,8 +64,13 @@
       "cordova-plugin-app-version": {},
       "cordova-plugin-background-mode": {},
       "cordova-plugin-app-preferences": {},
-      "cordova-plugin-nativestorage": {}
+      "ionic-plugin-keyboard": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {}
     },
-    "platforms": []
+    "platforms": [
+      "ios"
+    ]
   }
 }

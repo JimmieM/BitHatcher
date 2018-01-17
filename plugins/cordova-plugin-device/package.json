@@ -1,7 +1,35 @@
 {
-  "name": "cordova-plugin-device",
-  "version": "1.1.4",
-  "description": "Cordova Device Plugin",
+  "_from": "cordova-plugin-device@1.1.4",
+  "_id": "cordova-plugin-device@1.1.4",
+  "_inBundle": false,
+  "_integrity": "sha1-1f50cSBp0D9tOG7wvTIbOr0NONw=",
+  "_location": "/cordova-plugin-device",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "cordova-plugin-device@1.1.4",
+    "name": "cordova-plugin-device",
+    "escapedName": "cordova-plugin-device",
+    "rawSpec": "1.1.4",
+    "saveSpec": null,
+    "fetchSpec": "1.1.4"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-device/-/cordova-plugin-device-1.1.4.tgz",
+  "_shasum": "d5fe74712069d03f6d386ef0bd321b3abd0d38dc",
+  "_spec": "cordova-plugin-device@1.1.4",
+  "_where": "/Users/fsociety/Dropbox/Appar/Hatcher../BitHatcher_old",
+  "author": {
+    "name": "Apache Software Foundation"
+  },
+  "bugs": {
+    "url": "https://github.com/apache/cordova-plugin-device/issues"
+  },
+  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-device",
     "platforms": [
@@ -20,10 +48,19 @@
       "osx"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/apache/cordova-plugin-device"
+  "deprecated": false,
+  "description": "Cordova Device Plugin",
+  "devDependencies": {
+    "jshint": "^2.6.0"
   },
+  "engines": {
+    "cordovaDependencies": {
+      "2.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
+  "homepage": "https://github.com/apache/cordova-plugin-device#readme",
   "keywords": [
     "cordova",
     "device",
@@ -42,20 +79,15 @@
     "cordova-browser",
     "cordova-osx"
   ],
-  "scripts": {
-    "test": "npm run jshint",
-    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests"
-  },
-  "author": "Apache Software Foundation",
   "license": "Apache-2.0",
-  "engines": {
-    "cordovaDependencies": {
-      "2.0.0": {
-        "cordova": ">100"
-      }
-    }
+  "name": "cordova-plugin-device",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apache/cordova-plugin-device.git"
   },
-  "devDependencies": {
-    "jshint": "^2.6.0"
-  }
+  "scripts": {
+    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests",
+    "test": "npm run jshint"
+  },
+  "version": "1.1.4"
 }

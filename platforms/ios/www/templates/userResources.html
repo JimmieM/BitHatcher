@@ -1,0 +1,169 @@
+<!-- standalone project view -->
+<ion-view ng-controller="userResourcesController" title="Your Resources" id="page2">
+  <ion-nav-bar class="bar-balanced gradient" align-title="center">
+      <ion-nav-back-button class="button-icon ion-ios-arrow-left">
+      </ion-nav-back-button>
+    </ion-nav-bar>
+
+  <ion-content padding="true" class="has-header">
+  <div class="list">
+
+  <div class="item item-divider">
+    Food
+  </div>
+
+  <div class="item item-avatar item-button-right">
+    <img src="img/food/cooked_steak.png">
+    Cooked Steak
+    <br>
+    inventory: {{foodtype_cooked_steak}}
+    <br>
+    <a ng-if="foodtype_cooked_steak <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+
+  <div class="item item-avatar item-button-right">
+    <img src="img/food/cooked_chicken.png">
+    Cooked Chicken
+    <br>
+    inventory: {{foodtype_cooked_chicken}}
+    <br>
+    <a ng-if="foodtype_cooked_chicken <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+
+  <div class="item item-avatar item-button-right">
+    <img src="img/food/mini_carrots.png">
+    Mini Carrots
+    <br>
+    inventory: {{foodtype_mini_carrot}}
+    <br>
+    <a ng-if="foodtype_mini_carrot <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+
+  <div class="item item-avatar item-button-right">
+    <img src="img/food/carrot.png">
+    Carrots
+    <br>
+    inventory: {{foodtype_carrot}}
+    <br>
+    <a ng-if="foodtype_carrot <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+
+  <div class="item item-avatar item-button-right">
+    <img src="img/food/apple.png">
+    Apple
+    <br>
+    Inventory: {{foodtype_apple}}
+    <br>
+    <a ng-if="foodtype_apple <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+
+  <div class="item item-avatar item-button-right">
+    <img src="img/food/bird_seeds.png">
+    Bird seeds
+    <br>
+    inventory: {{foodtype_bird_seed}}
+    <br>
+    <a ng-if="foodtype_bird_seed <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+</div>
+
+  <!-- <div class="item item-avatar item-button-right">
+    <img src="https://www.google.se/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwjHt9LuhfDSAhUDjywKHaJDAXMQjRwIBw&url=http%3A%2F%2Fpiq.codeus.net%2Fpicture%2F60694%2Funtitled&bvm=bv.150729734,d.bGg&psig=AFQjCNHS5vWoYLRdg5-dn-_4nqQDbe257Q&ust=1490475980969287">
+    Berry mix
+    <br>
+    inventory: {{foodtype_berry_mix}}
+
+  </div> -->
+<div class="list">
+  <div class="item item-divider">
+    Drinks
+  </div>
+  <div class="item item-avatar item-button-right">
+  <img src="img/food/water.png">
+    Water bottle
+    <br>
+    inventory: {{foodtype_water}}
+    <br>
+    <a ng-if="foodtype_water <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+  <div class="item item-avatar item-button-right">
+    <img src="img/food/babybottle.png">
+      Feeding bottle
+      <br>
+      inventory: {{foodtype_feeding_bottle}}
+      <br>
+      <a ng-if="foodtype_feeding_bottle <= 0" class="ion-plus"> Purchase more</a>
+  </div>
+</div>
+
+<div class="list">
+  <div class="item item-divider">
+    Potions
+  </div>
+
+  <div class="item item-avatar item-button-right">
+    <img src="http://piq.codeus.net/static/media/userpics/piq_81320_400x400.png">
+    Revival Potion
+    <br>
+    inventory: {{potiontype_revival}}
+
+  </div>
+  <!-- <div class="item item-avatar item-button-right">
+    <img src="http://piq.codeus.net/static/media/userpics/piq_81320_400x400.png">
+    Health Potion
+    <br>
+    inventory: {{potiontype_health}}
+    <button ng-click="resourceInformation('Potion')" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-navicon-round"></button>
+  </div>
+  <div class="item item-avatar item-button-right">
+    <img src="http://piq.codeus.net/static/media/userpics/piq_81320_400x400.png">
+    Energy Potion
+    <br>
+    inventory: {{potiontype_energy}}
+    <button ng-click="resourceInformation('Potion')" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-navicon-round"></button>
+  </div>
+  <div class="item item-avatar item-button-right">
+    <img src="http://piq.codeus.net/static/media/userpics/piq_81320_400x400.png">
+    Agility Potion
+    <br>
+    inventory: {{potiontype_agility}}
+    <button ng-click="resourceInformation('Potion')" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-navicon-round"></button>
+  </div>
+  <div class="item item-avatar item-button-right">
+    <img src="http://piq.codeus.net/static/media/userpics/piq_81320_400x400.png">
+    Strength Potion
+    <br>
+    inventory: {{potiontype_strength}}
+    <button ng-click="resourceInformation('Potion')" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-navicon-round"></button>
+  </div>
+  <div class="item item-avatar item-button-right">
+    <img src="http://piq.codeus.net/static/media/userpics/piq_81320_400x400.png">
+    Happiness Potion
+    <br>
+    inventory: {{potiontype_happiness}}
+    <button ng-click="resourceInformation('Potion')" style="color:#33cd5f;background-color:transparent;" class="button button-balanced icon ion-navicon-round"></button>
+  </div> -->
+  </div>
+</div>
+
+</ion-content>
+
+  <!-- <ion-footer-bar style="padding: 0;height: 40px;bottom: 60px;background:transparent;" ng-if="cook_spices_menu" class="bar-stable">
+    <div class="row">
+      <div class="col col-90">
+        Pick a spice to cook with
+        <ion-scroll direction="x" class="wide-as-needed">
+          <button ng-click="cook(0)" ng-if="food_type >= 1" style="min-width: 30%; padding: 0 30px;" class="button button-assertive icon-left ion-bone">Normal</button>
+
+
+          <button ng-click="cook('spicy')" ng-if="user_inventory.cooktype_spices_spicy && food_type >= 1" style="min-width: 30%; padding: 0 30px;" class="button button-assertive icon-left ion-bone">Spicy ({{user_inventory.cooktype_spices_barbeque}})</button>
+          <button ng-click="cook('barbeque')" ng-if="user_inventory.cooktype_spices_barbeque >= 1 && food_type >= 1" style="min-width: 30%; padding: 0 30px;" class="button button-energized icon-left ion-bone">Barbeque ({{user_inventory.cooktype_spices_barbeque}})</button>
+        </ion-scroll>
+      </div>
+      <div class="col">
+        <button ng-click="toggle_menu(0)" class="button button-assertive icon-left ion-bone">x</button>
+      </div>
+    </div>
+  </ion-footer-bar> -->
+
+</ion-view>
