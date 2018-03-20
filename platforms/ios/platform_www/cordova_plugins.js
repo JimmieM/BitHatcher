@@ -49,14 +49,6 @@ module.exports = [
     "runs": true
   },
   {
-    "id": "phonegap-plugin-push.PushNotification",
-    "file": "plugins/phonegap-plugin-push/www/push.js",
-    "pluginId": "phonegap-plugin-push",
-    "clobbers": [
-      "PushNotification"
-    ]
-  },
-  {
     "id": "cordova-plugin-device.device",
     "file": "plugins/cordova-plugin-device/www/device.js",
     "pluginId": "cordova-plugin-device",
@@ -84,7 +76,6 @@ module.exports.metadata =
   "es6-promise-plugin": "4.1.0",
   "cordova-plugin-x-socialsharing": "5.1.8",
   "ionic-plugin-keyboard": "2.2.1",
-  "phonegap-plugin-push": "2.0.0-rc3",
   "cordova-plugin-device": "1.1.4",
   "cordova-plugin-background-mode": "0.7.2"
 };

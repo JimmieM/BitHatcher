@@ -56,16 +56,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "phonegap-plugin-push": {
-    "source": {
-      "type": "registry",
-      "id": "phonegap-plugin-push@~2.0.0-rc3"
-    },
-    "is_top_level": true,
-    "variables": {
-      "SENDER_ID": "302083109104"
-    }
-  },
   "de.appplant.cordova.plugin.local-notification": {
     "source": {
       "type": "registry",

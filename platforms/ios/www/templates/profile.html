@@ -24,10 +24,10 @@
       </h4>
     </ion-card-content>
 
-    <div ng-if="username !== view_profile.player_username"  class="button-bar">
+    <div ng-if="username !== view_profile.player_username"class="button-bar">
       <a ng-if="!is_friend" class="button gradient" ng-click="add_friend('{{view_profile.player_username}}')">Add as friend</a>
       <a ng-if="is_friend" class="button assertive" ng-click="unfriend('{{view_profile.player_username}}')">Unfriend {{view_profile.player_username}}</a>
-      <a class="button button-assertive">Block user</a>
+      <a class="button gradient">Battle</a>
     </div>
 
     <div class="list card">

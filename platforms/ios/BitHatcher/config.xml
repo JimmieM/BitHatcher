@@ -37,9 +37,6 @@
     <feature name="Keyboard">
         <param name="ios-package" onload="true" value="IonicKeyboard" />
     </feature>
-    <feature name="PushNotification">
-        <param name="ios-package" value="PushPlugin" />
-    </feature>
     <feature name="Device">
         <param name="ios-package" value="CDVDevice" />
     </feature>
@@ -48,7 +45,7 @@
     </feature>
     <name>BitHatcher</name>
     <description>dd</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <author email="jimmie.magnusson@hotmail.com" href="https://jimmiem.com">Jimmie Magnusson</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

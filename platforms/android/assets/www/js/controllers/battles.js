@@ -1,32 +1,32 @@
 
 angular.module('app.features.controllers').controller('battlesController', ['$scope','$http', '$state', '$stateParams','$ionicPlatform' , '$rootScope' , '$ionicLoading', '$ionicPopup', '$ionicModal','$cordovaLocalNotification' , function($scope, $http, $state, $stateParams, $ionicPlatform, $rootScope, $ionicLoading, $ionicPopup, $ionicModal, $cordovaLocalNotification){
 
-    $scope.goTo = function(state){
-      $state.go(state);
+  $scope.goTo = function(state){
+    $state.go(state);
+  };
+
+  $rootScope.$on("$cordovaLocalNotification:triggered", function(e,notification) {});
+
+  $scope.add = function() {
+    var now = new Date().getTime();
+    var _10SecondsFromNow = new Date(now + 10 * 1000);
+      $cordovaLocalNotification.add({
+          id: "1234",
+          date: now,
+          text: "This is a message",
+          title: "This is a title",
+      }).then(function () {
+          console.log("The notification has been set");
+      });
     };
 
-    $rootScope.$on("$cordovaLocalNotification:triggered", function(e,notification) {});
-
-    $scope.add = function() {
-      var now = new Date().getTime();
-      var _10SecondsFromNow = new Date(now + 10 * 1000);
-        $cordovaLocalNotification.add({
-            id: "1234",
-            date: now,
-            text: "This is a message",
-            title: "This is a title",
-        }).then(function () {
-            console.log("The notification has been set");
+    $scope.isScheduled = function() {
+        $cordovaLocalNotification.isScheduled("1234").then(function(isScheduled) {
+            alert("Notification 1234 Scheduled: " + isScheduled);
         });
-      };
+    };
 
-      $scope.isScheduled = function() {
-          $cordovaLocalNotification.isScheduled("1234").then(function(isScheduled) {
-              alert("Notification 1234 Scheduled: " + isScheduled);
-          });
-      };
-
-    var battles_guide = localStorage.getItem("battles_guide");
+  var battles_guide = localStorage.getItem("battles_guide");
 
   if (battles_guide === "false" || battles_guide === null || battles_guide === null || battles_guide !== "true" || battles_guide === false) {
     // popup with player 2 invite.
@@ -35,7 +35,6 @@ angular.module('app.features.controllers').controller('battlesController', ['$sc
       subTitle: "By battling other users pets, you'll gain rewards.",
       scope: $rootScope,
       buttons: [
-        { text: 'Cancel' },
         {
           text: 'Got it!',
           type: 'gradient',

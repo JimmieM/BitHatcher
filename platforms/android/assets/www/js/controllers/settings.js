@@ -1,16 +1,5 @@
-angular.module('app.features.controllers').controller('settingsController', ['$scope','$rootScope', '$state', '$http', '$ionicPopup','$cordovaSocialSharing' ,'$cordovaAppVersion' ,
-  function($scope, $rootScope, $state, $http, $ionicPopup,$cordovaSocialSharing,$cordovaAppVersion) {
-
-    document.addEventListener('deviceready', function () {
-
-      cordova.getAppVersion.getVersionNumber(function(value) {
-        $scope.appVersion = value;
-        $rootScope.appVersion = value;
-      });
-      cordova.getAppVersion.getAppName().then(function (appname) {
-        $scope.appName = appname;
-      });
-    });
+angular.module('app.features.controllers').controller('settingsController', ['$scope','$rootScope', '$state', '$http', '$ionicPopup','$cordovaSocialSharing' ,
+  function($scope, $rootScope, $state, $http, $ionicPopup,$cordovaSocialSharing) {
 
 
   $scope.goTo = function(state) {

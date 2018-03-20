@@ -1,7 +1,7 @@
 
 // global variables;
 var token = "30617466141a15e9f8224fbca3fd7a4f2378746a1c66084811c2b99f55b28ef6"; // static token for webserver.. // this is actually translated to, imadirtydirtygirl
-var https_url = "https://bithatcher.com/api/app/v2";
+var https_url = "https://bithatcher.com/api/app/v3";
 
 // store global projects
 
@@ -29,7 +29,7 @@ var mini_carrots = '../img/food/mini_carrots.png';
 var carrot = '../img/food/carrot.png';
 
 var bone = '../img/food/bone.png';
-var oomelette = '../img/food/omelette.png';
+var oomevarte = '../img/food/omevarte.png';
 var bird_seeds = '../img/food/bird_seeds.png';
 
 var water = '../img/food/water.png';
@@ -76,20 +76,12 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
 });
   $ionicConfigProvider.tabs.position('bottom'); // OR top
   $sceDelegateProvider.resourceUrlWhitelist([ 'self','*://www.bithatcher.com/**', '*://player.vimeo.com/video/**', '*://www.triviadash.net/**']);
-
 })
 
 
 
 .run(function($ionicPlatform, $state, $rootScope, $http, $ionicLoading, $ionicPopup, $cordovaVibration, $cordovaLocalNotification, $ionicPush) {
   $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-  console.log("Boi");
-
-  // $ionicPush.register().then(function (token) {
-  //    // do something with your 'token' and also save the token with $ionicPush
-  //    console.log('The Stupid Token; ' + token);
-  //
-  //  });
 
   $rootScope.user_id = localStorage.getItem("Id");
 
@@ -106,20 +98,11 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
 
   document.addEventListener('deviceready', function () {
 
+    console.log("Heya!!");
+    console.log($rootScope.username);
     function ok (value) {console.log(value + " success save");}
     function fail (error) {console.log(error + "error save");}
 
-    let setData = {
-      username: 'Jomme'
-    };
-
-    NativeStorage.setItem("reference", setData, setSuccess, setError);
-     function setSuccess(obj){
-       console.log("Success 123");
-     }
-     function setError(obj){
-       console.log("Fail 123");
-     }
 
     // For IOS
     var prefs = plugins.appPreferences;
@@ -133,28 +116,15 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
     console.log(prefs.fetch ('username_loggedin').then (ok, fail));
 
 
-    cordova.plugins.backgroundMode.enable();
-
-    realtime = new Ably.Realtime('YWxmHw.T0c4Gg:9UQUZRXTeUv30RVL');
-
-
-    realtime.connection.on('connected', function() {
-      //alert('Connected');
-    });
-
-
-    if (cordova.plugins.backgroundMode.isActive()) {
-      alert("Is now active!");
-    }
-    // cordova.plugins.backgroundMode is now available
+    //cordova.plugins.backgroundMode.enable();
   }, false);
 
   LoggedIn = JSON.parse(localStorage.getItem("LoggedIn"));
   if (!LoggedIn || !$rootScope.loggedIn) {
 
-    // redirect to guide if not completed..
-    guideCompleted = localStorage.getItem("GuideCompletion");
-    if (!guideCompleted) {
+    // redirect to guide if not compvared..
+    guideCompvared = localStorage.getItem("GuideCompvarion");
+    if (!guideCompvared) {
       //$urlRouterProvider.otherwise('/guide-1');
       $state.go('firstGuide');
     } else {
@@ -169,8 +139,8 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
     $state.go('tabsController.projects');
   }
 
-  guideCompleted = localStorage.getItem("GuideCompletion");
-  if (username === null && guideCompleted === true) {
+  guideCompvared = localStorage.getItem("GuideCompvarion");
+  if (username === null && guideCompvared === true) {
     $ionicPopup.show({
       title: 'Error',
       template: 'Please sign in',
@@ -235,7 +205,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
 
  $rootScope.get_attacks_by_id = function(project_id) {
    $ionicLoading.hide();
-   obj = {
+   var obj = {
      username_request: username,
      token: token,
      project_id: project_id
@@ -248,7 +218,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
    });
 
-   let all_attacks;
+   var all_attacks;
 
    request.success(function(response) {
      console.log(response);
@@ -258,7 +228,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
      */
 
      // your pets current attacks.
-     let current_attacks = response[0];
+     var current_attacks = response[0];
 
      if (current_attacks !== null) {
        for (var i = 0; i < current_attacks.length; i++) {
@@ -276,7 +246,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
        }
      }
 
-     let count_owned = 0;
+     var count_owned = 0;
 
      for (x = 0; x < all_attacks.length; x++) {
 
@@ -303,8 +273,6 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
          //   }
          // }
        }
-
-
      }
 
      $rootScope.project_attacks = all_attacks;
@@ -322,7 +290,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
     };
     var request = $http({
       method: "post",
-      url: https_url + "/projects/fetch_projects_beta.php",
+      url: https_url + "/projects/fetch_projects.php",
       data: obj,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
    });
@@ -415,7 +383,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
   response['achievements']
   */
   $rootScope.earnedAchievement = function(achievement_obj) {
-    let achievements = achievement_obj['achievements'];
+    var achievements = achievement_obj['achievements'];
     for (var i = 0; i < achievements.length; i++) {
       if (achievements[i].achievement_earned) {
         $rootScope.displayAchievement(
@@ -508,7 +476,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
     $rootScope.project_id = project_id;
     $rootScope.project_name = project_name;
     config = $ionicPopup.show({
-      template: "<h4>New pet name</h4><input type='text' placeholder='New pet name' value='{{project_name}}' ng-model='new_project_name'><br><button class='button button-assertive button-block' ng-click='deleteProject({{project_id}}, username)'>Delete {{project_name}}</button>",
+      template: "<h4>New pet name</h4><input type='text' placeholder='New pet name' value='{{project_name}}' ng-model='new_project_name'><br><button class='button button-assertive button-block' ng-click='devareProject({{project_id}}, username)'>Devare {{project_name}}</button>",
       title: 'Config ' + project_name,
       subTitle: '',
       scope: $rootScope,
@@ -557,20 +525,20 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
     });
   };
 
-  $rootScope.deleteProject = function(project_id, username) {
+  $rootScope.devareProject = function(project_id, username) {
     config.close();
     $ionicPopup.show({
-      title: 'Are you sure to delete this pet?',
+      title: 'Are you sure to devare this pet?',
       subTitle: 'You can not undo this action!',
       scope: $rootScope,
       buttons: [
         { text: 'Cancel' },
         {
-          text: '<b>Delete</b>',
+          text: '<b>Devare</b>',
           type: 'button-assertive',
           onTap: function(e) {
             var obj = {
-                delete_project: true,
+                devare_project: true,
                 token: token,
                 username_request: username,
                 project_id: project_id
@@ -578,7 +546,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
 
               var request  = $http({
                 method: "post",
-                url: https_url + "/projects/project_actions/delete_project.php",
+                url: https_url + "/projects/project_actions/devare_project.php",
                 data: obj,
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
@@ -586,15 +554,15 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
             request.success(function(data) {
               console.log(data);
               if (data.success == 1) {
-                $rootScope.popup_notice("Pet successfully been deleted!");
+                $rootScope.popup_notice("Pet successfully been devared!");
                 $rootScope.fetchProjects();
                 $state.reload();
               } else {
-                $rootScope.popup_notice("Pet could not be deleted.", "Please try again!");
+                $rootScope.popup_notice("Pet could not be devared.", "Please try again!");
               }
             });
             request.error(function(data) {
-              $rootScope.popup_notice("Pet could not be deleted.", "Please try again!");
+              $rootScope.popup_notice("Pet could not be devared.", "Please try again!");
             });
           }
         }
@@ -621,7 +589,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
 
       var request = $http({
         method: "post",
-        url: https_url + "/projects/fetch_projects_beta.php",
+        url: https_url + "/projects/fetch_projects.php",
         data: obj,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
@@ -630,7 +598,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
       $rootScope.project_variables = data['pets'][0];
     });
     request.finally(function() {
-      $rootScope.$broadcast('scroll.refreshComplete');
+      $rootScope.$broadcast('scroll.refreshCompvare');
       $state.reload();
       return $rootScope.project_variables;
     });
@@ -707,9 +675,7 @@ angular.module('app', ['ng-walkthrough','ionic', 'app.controllers', 'app.routes'
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
 
-      StatusBar.styleDefault();
-
-      StatusBar.backgroundColorByName("white");
+      //StatusBar.styleDefault();
     }
 
      $rootScope.$on('$cordovaLocalNotification:trigger',

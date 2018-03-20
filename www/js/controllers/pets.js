@@ -40,7 +40,7 @@ angular.module('app.features.controllers').controller('listController', ['$scope
         var request = $http({
           token: token,
           method: "post",
-          url: https_url + "/projects/fetch_projects_beta.php",
+          url: https_url + "/projects/fetch_projects.php",
           data: obj,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
@@ -229,8 +229,6 @@ angular.module('app.features.controllers').controller('listController', ['$scope
       // call this to place Project data in view.
       $rootScope.projects;
 
-      console.log($rootScope.projects);
-
       // select row action
       $scope.viewProject = function(id) {
 
@@ -250,7 +248,7 @@ angular.module('app.features.controllers').controller('listController', ['$scope
 
         var request = $http({
           method: "post",
-          url: https_url + "/projects/fetch_projects_beta.php",
+          url: https_url + "/projects/fetch_projects.php",
           data: obj,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });

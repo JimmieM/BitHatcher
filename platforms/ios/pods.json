@@ -1,8 +1,1 @@
-{
-    "FirebaseMessaging": {
-        "name": "FirebaseMessaging",
-        "type": "podspec",
-        "spec": "~> 1.2.1",
-        "count": 1
-    }
-}
+{}

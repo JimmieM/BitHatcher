@@ -2,5 +2,5 @@
 platform :ios, '8.0'
 target 'BitHatcher' do
 	project 'BitHatcher.xcodeproj'
-	pod 'FirebaseMessaging', '~> 1.2.1'
+
 end

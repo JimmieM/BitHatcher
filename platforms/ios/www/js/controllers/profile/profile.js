@@ -28,6 +28,32 @@ function($scope, $rootScope, $http, $state, $stateParams, $ionicPlatform, $ionic
 
   $scope.render_achievements($scope.view_profile.achievements);
 
+  $scope.battle = function() {
+    var obj = {
+      token: token,
+      username_request: $rootScope.username,
+      username_battle: $scope.view_profile.player_username
+     };
+
+    var request = $http({
+      token: token,
+      method: "post",
+      url: https_url + "/battle/new_battle.php",
+      data: obj,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+
+    request.success(function(data) {
+      console.log(data);
+      if (data.success == 1) {
+        $scope.is_friend = true;
+        $rootScope.popup_notice(username_add + ' is now your friend');
+      } else {
+        $rootScope.popup_notice('Unexpected error', 'Error: ' + data.error);
+      }
+    });
+  };
+
   $scope.add_friend = function(username_add) {
     if (!$scope.is_friend) {
       var obj = {

@@ -2,7 +2,7 @@
 <widget id="com.bithatcher.bithatcher" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>BitHatcher</name>
     <description>dd</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <author email="jimmie.magnusson@hotmail.com" href="https://jimmiem.com">Jimmie Magnusson</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

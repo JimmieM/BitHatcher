@@ -37,10 +37,6 @@
               "count": 1
             },
             {
-              "xml": "<feature name=\"PushNotification\"><param name=\"ios-package\" value=\"PushPlugin\" /></feature>",
-              "count": 1
-            },
-            {
               "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
               "count": 1
             },
@@ -55,10 +51,6 @@
         "parents": {
           "UIBackgroundModes": [
             {
-              "xml": "<array><string>remote-notification</string></array>",
-              "count": 1
-            },
-            {
               "xml": "<array><string>audio</string></array>",
               "count": 1
             }
@@ -67,22 +59,12 @@
       },
       "*-Debug.plist": {
         "parents": {
-          "aps-environment": [
-            {
-              "xml": "<string>development</string>",
-              "count": 1
-            }
-          ]
+          "aps-environment": []
         }
       },
       "*-Release.plist": {
         "parents": {
-          "aps-environment": [
-            {
-              "xml": "<string>production</string>",
-              "count": 1
-            }
-          ]
+          "aps-environment": []
         }
       }
     }
@@ -107,9 +89,6 @@
       "PACKAGE_NAME": "com.bithatcher.bithatcher"
     },
     "ionic-plugin-keyboard": {
-      "PACKAGE_NAME": "com.bithatcher.bithatcher"
-    },
-    "phonegap-plugin-push": {
       "PACKAGE_NAME": "com.bithatcher.bithatcher"
     },
     "cordova-plugin-device": {
@@ -170,14 +149,6 @@
       "runs": true
     },
     {
-      "id": "phonegap-plugin-push.PushNotification",
-      "file": "plugins/phonegap-plugin-push/www/push.js",
-      "pluginId": "phonegap-plugin-push",
-      "clobbers": [
-        "PushNotification"
-      ]
-    },
-    {
       "id": "cordova-plugin-device.device",
       "file": "plugins/cordova-plugin-device/www/device.js",
       "pluginId": "cordova-plugin-device",
@@ -203,7 +174,6 @@
     "es6-promise-plugin": "4.1.0",
     "cordova-plugin-x-socialsharing": "5.1.8",
     "ionic-plugin-keyboard": "2.2.1",
-    "phonegap-plugin-push": "2.0.0-rc3",
     "cordova-plugin-device": "1.1.4",
     "cordova-plugin-background-mode": "0.7.2"
   }
